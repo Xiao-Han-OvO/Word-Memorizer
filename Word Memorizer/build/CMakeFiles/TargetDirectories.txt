@@ -1,0 +1,3 @@
+/home/lsoi_01/Word Revision/build/CMakeFiles/rebuild_cache.dir
+/home/lsoi_01/Word Revision/build/CMakeFiles/edit_cache.dir
+/home/lsoi_01/Word Revision/build/CMakeFiles/word_memorizer.dir

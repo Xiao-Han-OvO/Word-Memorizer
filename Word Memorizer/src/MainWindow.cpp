@@ -1,8 +1,9 @@
 #include "MainWindow.h"
+#include "SettingsDialog.h"
 #include <iostream>
 #include <iomanip>
+#include <algorithm>
 
-// 在构造函数中添加设置菜单项
 MainWindow::MainWindow() 
     : mainBox(Gtk::ORIENTATION_VERTICAL),
       completionBox(Gtk::ORIENTATION_VERTICAL),
@@ -15,27 +16,31 @@ MainWindow::MainWindow()
     set_title("单词背诵工具 - 交互版");
     set_default_size(500, 400);
     
-    // 在菜单中添加设置项
+    // 创建菜单栏
     fileMenu.set_label("文件");
     openMenuItem.set_label("打开单词库");
     resetProgressMenuItem.set_label("重置进度");
-    settingsMenuItem.set_label("主题设置");  // 新增
+    settingsMenuItem.set_label("主题设置");
     exitMenuItem.set_label("退出");
     
     fileSubmenu.append(openMenuItem);
     fileSubmenu.append(resetProgressMenuItem);
-    fileSubmenu.append(settingsMenuItem);  // 新增
+    fileSubmenu.append(settingsMenuItem);
     fileSubmenu.append(exitMenuItem);
     fileMenu.set_submenu(fileSubmenu);
     
-    menuBar.append(fileMenu);
-
-	 
-    // 连接设置菜单信号
-    settingsMenuItem.signal_activate().connect(sigc::mem_fun(*this, &MainWindow::on_settings));
+    viewMenu.set_label("查看");
+    wrongWordsMenuItem.set_label("查看错词本");
+    clearWrongWordsMenuItem.set_label("清空错词本");
+    debugMenuItem.set_label("调试信息");
     
-    // 应用主题颜色
-    apply_theme_colors();
+    viewSubmenu.append(wrongWordsMenuItem);
+    viewSubmenu.append(clearWrongWordsMenuItem);
+    viewSubmenu.append(debugMenuItem);
+    viewMenu.set_submenu(viewSubmenu);
+    
+    menuBar.append(fileMenu);
+    menuBar.append(viewMenu);
     
     // 设置单词显示区域
     wordBox.set_spacing(5);
@@ -43,7 +48,6 @@ MainWindow::MainWindow()
     
     posLabel.set_justify(Gtk::JUSTIFY_CENTER);
     posLabel.override_font(Pango::FontDescription("Sans 16"));
-    posLabel.override_color(Gdk::RGBA("blue"));
     
     meaningLabel.set_justify(Gtk::JUSTIFY_CENTER);
     meaningLabel.override_font(Pango::FontDescription("Sans 18"));
@@ -80,6 +84,11 @@ MainWindow::MainWindow()
     attemptLabel.set_justify(Gtk::JUSTIFY_CENTER);
     attemptLabel.override_font(Pango::FontDescription("Sans 12"));
     
+    // 设置状态标签
+    statusLabel.set_justify(Gtk::JUSTIFY_CENTER);
+    statusLabel.override_font(Pango::FontDescription("Sans 10"));
+    statusLabel.override_color(Gdk::RGBA("gray"));
+    
     // 设置进度标签
     progressLabel.set_justify(Gtk::JUSTIFY_CENTER);
     progressLabel.override_font(Pango::FontDescription("Sans 12"));
@@ -102,6 +111,7 @@ MainWindow::MainWindow()
     mainBox.pack_start(inputBox, Gtk::PACK_SHRINK);
     mainBox.pack_start(feedbackLabel, Gtk::PACK_SHRINK);
     mainBox.pack_start(attemptLabel, Gtk::PACK_SHRINK);
+    mainBox.pack_start(statusLabel, Gtk::PACK_SHRINK);
     mainBox.pack_start(progressLabel, Gtk::PACK_SHRINK);
     mainBox.pack_start(controlBox, Gtk::PACK_SHRINK);
     mainBox.pack_start(statusbar, Gtk::PACK_SHRINK);
@@ -136,7 +146,12 @@ MainWindow::MainWindow()
     // 连接信号
     openMenuItem.signal_activate().connect(sigc::mem_fun(*this, &MainWindow::on_open_file));
     resetProgressMenuItem.signal_activate().connect(sigc::mem_fun(*this, &MainWindow::on_reset_progress));
+    settingsMenuItem.signal_activate().connect(sigc::mem_fun(*this, &MainWindow::on_settings));
     exitMenuItem.signal_activate().connect(sigc::ptr_fun(&Gtk::Main::quit));
+    
+    wrongWordsMenuItem.signal_activate().connect(sigc::mem_fun(*this, &MainWindow::on_review_wrong_words));
+    clearWrongWordsMenuItem.signal_activate().connect(sigc::mem_fun(*this, &MainWindow::on_clear_wrong_words));
+    debugMenuItem.signal_activate().connect(sigc::mem_fun(*this, &MainWindow::on_debug_info));
     
     submitButton.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_submit_answer));
     showAnswerButton.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_show_answer));
@@ -144,38 +159,25 @@ MainWindow::MainWindow()
     answerEntry.signal_activate().connect(sigc::mem_fun(*this, &MainWindow::on_entry_activate));
     
     restartButton.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_restart));
-    reviewWrongWordsButton.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_review_wrong_words));
+    // reviewWrongWordsButton.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_review_wrong_words));
+    reviewWrongWordsButton.signal_clicked().connect([this]() {
+    // 先关闭完成页面对话框（如果有的话）
+    // 然后显示错词本
+    this->on_review_wrong_words();
+});
     
     // 初始状态
     reset_attempt();
     update_display();
+    
+    // 应用主题颜色
+    apply_theme_colors();
     
     show_all_children();
     statusbar.push("请通过菜单加载单词库文件");
 }
 
 MainWindow::~MainWindow() {}
-
-
-// 添加设置处理方法
-void MainWindow::on_settings() {
-    SettingsDialog dialog(*this, settingsManager);
-    int result = dialog.run();
-    
-    if (result == Gtk::RESPONSE_OK) {
-        // 用户点击了保存，重新应用主题颜色
-        apply_theme_colors();
-    }
-}
-
-// 应用主题颜色
-void MainWindow::apply_theme_colors() {
-    // 应用词性颜色
-    posLabel.override_color(Gdk::RGBA(settingsManager.getPosColor()));
-    
-    // 注意：其他颜色会在相应的方法中动态应用
-    // 例如，在 on_submit_answer 和 on_show_answer 中应用正确/错误/答案颜色
-}
 
 void MainWindow::on_open_file() {
     Gtk::FileChooserDialog dialog("选择单词库文件", Gtk::FILE_CHOOSER_ACTION_OPEN);
@@ -205,6 +207,14 @@ void MainWindow::on_open_file() {
 }
 
 void MainWindow::on_next_word() {
+    // 如果当前单词曾经拼错过但用户没有正确回答，确保它被记录到错词本
+    if (!currentWord.word.empty() && 
+        wordManager.hasFailed(currentWord.word) && 
+        answerEntry.get_sensitive()) { // 输入框可用表示用户没有正确回答
+        // 确保错词被记录
+        wordManager.addWrongWord(currentWord);
+    }
+    
     if (wordManager.allWordsMastered()) {
         show_completion_page();
         return;
@@ -218,7 +228,6 @@ void MainWindow::on_next_word() {
     }
 }
 
-// 更新 on_submit_answer 方法以使用主题颜色
 void MainWindow::on_submit_answer() {
     std::string userAnswer = answerEntry.get_text();
     
@@ -234,7 +243,10 @@ void MainWindow::on_submit_answer() {
         wordManager.addMasteredWord(currentWord.word);
         
         feedbackLabel.set_label("✓ 正确！答案: " + currentWord.word);
-        feedbackLabel.override_color(Gdk::RGBA(settingsManager.getCorrectColor()));  // 使用主题颜色
+        Gdk::RGBA correctColor;
+        if (correctColor.set(settingsManager.getCorrectColor())) {
+            feedbackLabel.override_color(correctColor);
+        }
         answerEntry.set_sensitive(false);
         submitButton.set_sensitive(false);
         
@@ -247,10 +259,17 @@ void MainWindow::on_submit_answer() {
                 sigc::mem_fun(*this, &MainWindow::show_completion_page), 1000);
         }
     } else {
-        // 答案错误
+        // 答案错误，立即记录到错词本
+        wordManager.addWrongWord(currentWord);
+        // 同时记录失败状态
+        wordManager.addFailedWord(currentWord.word);
+        
         attemptCount++;
         feedbackLabel.set_label("✗ 错误！请再试一次");
-        feedbackLabel.override_color(Gdk::RGBA(settingsManager.getErrorColor()));  // 使用主题颜色
+        Gdk::RGBA errorColor;
+        if (errorColor.set(settingsManager.getErrorColor())) {
+            feedbackLabel.override_color(errorColor);
+        }
         attemptLabel.set_label("尝试次数: " + std::to_string(attemptCount));
         
         // 清空输入框并聚焦
@@ -259,15 +278,19 @@ void MainWindow::on_submit_answer() {
     }
 }
 
-// 更新 on_show_answer 方法以使用主题颜色
 void MainWindow::on_show_answer() {
     feedbackLabel.set_label("正确答案: " + currentWord.word);
-    feedbackLabel.override_color(Gdk::RGBA(settingsManager.getAnswerColor()));
+    Gdk::RGBA answerColor;
+    if (answerColor.set(settingsManager.getAnswerColor())) {
+        feedbackLabel.override_color(answerColor);
+    }
     answerEntry.set_sensitive(false);
     submitButton.set_sensitive(false);
     
-    // 添加到错词本（会自动检查重复）
+    // 添加到错词本
     wordManager.addWrongWord(currentWord);
+    // 同时记录失败状态
+    wordManager.addFailedWord(currentWord.word);
 }
 
 void MainWindow::on_entry_activate() {
@@ -276,6 +299,7 @@ void MainWindow::on_entry_activate() {
 
 void MainWindow::on_restart() {
     wordManager.clearMasteredWords();
+    wordManager.clearWrongWords();
     show_learning_page();
     on_next_word();
     statusbar.push("进度已重置，重新开始学习");
@@ -283,6 +307,24 @@ void MainWindow::on_restart() {
 
 void MainWindow::on_review_wrong_words() {
     auto wrongWords = wordManager.getWrongWords();
+    
+    // 添加详细的调试输出
+    std::cout << "=== 错词本调试信息 ===" << std::endl;
+    std::cout << "错词数量: " << wrongWords.size() << std::endl;
+    std::cout << "错词列表:" << std::endl;
+    
+    if (wrongWords.empty()) {
+        std::cout << "错词列表为空" << std::endl;
+    } else {
+        for (size_t i = 0; i < wrongWords.size(); ++i) {
+            const auto& word = wrongWords[i];
+            std::cout << "  " << (i+1) << ". " << word.word 
+                      << " [" << word.pos << "] - " << word.meaning 
+                      << " | 例句: " << word.example << std::endl;
+        }
+    }
+    std::cout << "=====================" << std::endl;
+    
     if (wrongWords.empty()) {
         Gtk::MessageDialog infoDialog(*this, "错词本为空", false, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK, true);
         infoDialog.run();
@@ -297,8 +339,9 @@ void MainWindow::on_review_wrong_words() {
     // 创建滚动窗口
     Gtk::ScrolledWindow scrolledWindow;
     scrolledWindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    scrolledWindow.set_min_content_height(300);
     
-    // 创建多列布局的容器
+    // 创建主容器
     Gtk::Box mainBox(Gtk::ORIENTATION_VERTICAL, 10);
     
     // 添加标题和统计信息
@@ -310,52 +353,59 @@ void MainWindow::on_review_wrong_words() {
     
     // 创建单词列表的容器
     Gtk::Box wordsBox(Gtk::ORIENTATION_VERTICAL, 8);
+    wordsBox.set_border_width(5);
     
     // 显示每个错词
     for (size_t i = 0; i < wrongWords.size(); ++i) {
         const auto& word = wrongWords[i];
         
         // 创建单个单词的框架
-        Gtk::Frame wordFrame;
-        wordFrame.set_shadow_type(Gtk::SHADOW_ETCHED_IN);
+        Gtk::Frame* wordFrame = Gtk::manage(new Gtk::Frame());
+        wordFrame->set_shadow_type(Gtk::SHADOW_ETCHED_IN);
         
-        Gtk::Box wordBox(Gtk::ORIENTATION_VERTICAL, 5);
-        wordBox.set_border_width(8);
+        Gtk::Box* wordBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 5));
+        wordBox->set_border_width(8);
         
         // 单词和词性
-        Gtk::Box wordInfoBox(Gtk::ORIENTATION_HORIZONTAL, 10);
-        Gtk::Label wordLabel(word.word);
-        wordLabel.override_font(Pango::FontDescription("Sans Bold 12"));
-        Gtk::Label posLabel("[" + word.pos + "]");
-        posLabel.override_color(Gdk::RGBA(settingsManager.getPosColor()));
+        Gtk::Box* wordInfoBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 10));
+        Gtk::Label* wordLabel = Gtk::manage(new Gtk::Label(word.word));
+        wordLabel->override_font(Pango::FontDescription("Sans Bold 12"));
         
-        wordInfoBox.pack_start(wordLabel, Gtk::PACK_SHRINK);
-        wordInfoBox.pack_start(posLabel, Gtk::PACK_SHRINK);
+        Gtk::Label* posLabel = Gtk::manage(new Gtk::Label("[" + word.pos + "]"));
+        Gdk::RGBA posColor;
+        if (posColor.set(settingsManager.getPosColor())) {
+            posLabel->override_color(posColor);
+        }
+        
+        wordInfoBox->pack_start(*wordLabel, Gtk::PACK_SHRINK);
+        wordInfoBox->pack_start(*posLabel, Gtk::PACK_SHRINK);
         
         // 中文意思
-        Gtk::Label meaningLabel("含义: " + word.meaning);
-        meaningLabel.set_alignment(0, 0.5); // 左对齐
+        Gtk::Label* meaningLabel = Gtk::manage(new Gtk::Label("含义: " + word.meaning));
+        meaningLabel->set_alignment(0, 0.5); // 左对齐
         
         // 例句
-        Gtk::Label exampleLabel("例句: " + word.example);
-        exampleLabel.set_alignment(0, 0.5); // 左对齐
-        exampleLabel.set_line_wrap(true);
+        Gtk::Label* exampleLabel = Gtk::manage(new Gtk::Label("例句: " + word.example));
+        exampleLabel->set_alignment(0, 0.5); // 左对齐
+        exampleLabel->set_line_wrap(true);
         
-        wordBox.pack_start(wordInfoBox, Gtk::PACK_SHRINK);
-        wordBox.pack_start(meaningLabel, Gtk::PACK_SHRINK);
-        wordBox.pack_start(exampleLabel, Gtk::PACK_SHRINK);
+        wordBox->pack_start(*wordInfoBox, Gtk::PACK_SHRINK);
+        wordBox->pack_start(*meaningLabel, Gtk::PACK_SHRINK);
+        wordBox->pack_start(*exampleLabel, Gtk::PACK_SHRINK);
         
-        wordFrame.add(wordBox);
-        wordsBox.pack_start(wordFrame, Gtk::PACK_SHRINK);
+        wordFrame->add(*wordBox);
+        wordsBox.pack_start(*wordFrame, Gtk::PACK_SHRINK);
     }
     
-    // 将单词列表放入滚动窗口
+    // 将单词列表直接放入滚动窗口
     scrolledWindow.add(wordsBox);
     
     // 创建按钮
     Gtk::ButtonBox buttonBox(Gtk::ORIENTATION_HORIZONTAL);
     buttonBox.set_layout(Gtk::BUTTONBOX_END);
     Gtk::Button closeButton("关闭");
+    Gtk::Button clearButton("清空错词本");
+    buttonBox.pack_start(clearButton, Gtk::PACK_SHRINK);
     buttonBox.pack_start(closeButton, Gtk::PACK_SHRINK);
     
     // 布局
@@ -369,14 +419,79 @@ void MainWindow::on_review_wrong_words() {
         wrongWordsDialog.response(Gtk::RESPONSE_OK);
     });
     
+    clearButton.signal_clicked().connect([this, &wrongWordsDialog]() {
+        Gtk::MessageDialog confirmDialog(wrongWordsDialog, "确定要清空错词本吗？", false, 
+                                        Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO, true);
+        if (confirmDialog.run() == Gtk::RESPONSE_YES) {
+            wordManager.clearWrongWords();
+            wrongWordsDialog.response(Gtk::RESPONSE_OK);
+            statusbar.push("错词本已清空");
+        }
+    });
+    
     wrongWordsDialog.show_all_children();
     wrongWordsDialog.run();
 }
 
+void MainWindow::on_clear_wrong_words() {
+    wordManager.clearWrongWords();
+    statusbar.push("错词本已清空");
+}
+
 void MainWindow::on_reset_progress() {
     wordManager.clearMasteredWords();
+    wordManager.clearWrongWords();
     update_progress();
     statusbar.push("学习进度已重置");
+}
+
+void MainWindow::on_settings() {
+    SettingsDialog dialog(*this, settingsManager);
+    int result = dialog.run();
+    
+    if (result == Gtk::RESPONSE_OK) {
+        // 用户点击了保存，重新应用主题颜色
+        apply_theme_colors();
+        
+        // 如果当前有单词显示，也更新其颜色
+        if (!currentWord.word.empty()) {
+            // 重新设置词性标签颜色
+            Gdk::RGBA posColor;
+            if (posColor.set(settingsManager.getPosColor())) {
+                posLabel.override_color(posColor);
+            }
+        }
+        
+        // 显示确认消息
+        statusbar.push("主题设置已更新");
+    }
+}
+
+void MainWindow::on_debug_info() {
+    std::stringstream debugInfo;
+    debugInfo << "调试信息:\n\n";
+    debugInfo << "总单词数: " << wordManager.getTotalWords() << "\n";
+    debugInfo << "已掌握单词: " << wordManager.getMasteredWordsCount() << "\n";
+    debugInfo << "错词数量: " << wordManager.getWrongWordsCount() << "\n";
+    debugInfo << "剩余单词: " << wordManager.getRemainingWordsCount() << "\n";
+    
+    debugInfo << "\n当前单词: ";
+    if (!currentWord.word.empty()) {
+        debugInfo << currentWord.word << " [" << currentWord.pos << "]";
+        debugInfo << "\n是否曾经失败: " << (wordManager.hasFailed(currentWord.word) ? "是" : "否");
+    } else {
+        debugInfo << "无";
+    }
+    
+    debugInfo << "\n\n颜色设置:\n";
+    debugInfo << "词性颜色: " << settingsManager.getPosColor() << "\n";
+    debugInfo << "正确颜色: " << settingsManager.getCorrectColor() << "\n";
+    debugInfo << "错误颜色: " << settingsManager.getErrorColor() << "\n";
+    debugInfo << "答案颜色: " << settingsManager.getAnswerColor() << "\n";
+    
+    Gtk::MessageDialog dialog(*this, debugInfo.str(), false, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK, true);
+    dialog.set_title("调试信息");
+    dialog.run();
 }
 
 void MainWindow::update_display() {
@@ -384,6 +499,14 @@ void MainWindow::update_display() {
         posLabel.set_label("[" + currentWord.pos + "]");
         meaningLabel.set_label(currentWord.meaning);
         exampleLabel.set_label("例句: " + currentWord.example);
+        
+        // 更新状态标签
+        if (wordManager.hasFailed(currentWord.word)) {
+            statusLabel.set_label("⚠️ 这个单词你曾经拼错过");
+            statusLabel.override_color(Gdk::RGBA("orange"));
+        } else {
+            statusLabel.set_label("");
+        }
         
         // 重置反馈
         feedbackLabel.set_label("");
@@ -400,6 +523,7 @@ void MainWindow::update_display() {
         exampleLabel.set_label("");
         feedbackLabel.set_label("");
         attemptLabel.set_label("");
+        statusLabel.set_label("");
     }
 }
 
@@ -451,4 +575,21 @@ void MainWindow::update_progress() {
         
         statusbar.push(statusText.str());
     }
+}
+
+void MainWindow::apply_theme_colors() {
+    // 应用词性颜色
+    Gdk::RGBA posColor;
+    if (posColor.set(settingsManager.getPosColor())) {
+        posLabel.override_color(posColor);
+    } else {
+        // 如果颜色设置失败，使用默认蓝色
+        posLabel.override_color(Gdk::RGBA("blue"));
+    }
+    
+    // 重置其他标签的颜色，确保下次使用时能应用新颜色
+    feedbackLabel.override_color(Gdk::RGBA()); // 重置为默认颜色
+    
+    // 更新状态栏信息
+    update_progress();
 }

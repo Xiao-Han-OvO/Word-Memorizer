@@ -43,10 +43,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "/home/lsoi_01/Word Revision"
+CMAKE_SOURCE_DIR = "/media/lsoi_01/76E8-CACF/Word Memorizer"
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "/home/lsoi_01/Word Revision/build"
+CMAKE_BINARY_DIR = "/media/lsoi_01/76E8-CACF/Word Memorizer/build"
 
 # Include any dependencies generated for this target.
 include CMakeFiles/word_memorizer.dir/depend.make
@@ -59,68 +59,68 @@ include CMakeFiles/word_memorizer.dir/flags.make
 
 CMakeFiles/word_memorizer.dir/src/main.cpp.o: CMakeFiles/word_memorizer.dir/flags.make
 CMakeFiles/word_memorizer.dir/src/main.cpp.o: ../src/main.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/lsoi_01/Word Revision/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/word_memorizer.dir/src/main.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/word_memorizer.dir/src/main.cpp.o -c "/home/lsoi_01/Word Revision/src/main.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/lsoi_01/76E8-CACF/Word Memorizer/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/word_memorizer.dir/src/main.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/word_memorizer.dir/src/main.cpp.o -c "/media/lsoi_01/76E8-CACF/Word Memorizer/src/main.cpp"
 
 CMakeFiles/word_memorizer.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/word_memorizer.dir/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lsoi_01/Word Revision/src/main.cpp" > CMakeFiles/word_memorizer.dir/src/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/media/lsoi_01/76E8-CACF/Word Memorizer/src/main.cpp" > CMakeFiles/word_memorizer.dir/src/main.cpp.i
 
 CMakeFiles/word_memorizer.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/word_memorizer.dir/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lsoi_01/Word Revision/src/main.cpp" -o CMakeFiles/word_memorizer.dir/src/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/media/lsoi_01/76E8-CACF/Word Memorizer/src/main.cpp" -o CMakeFiles/word_memorizer.dir/src/main.cpp.s
 
 CMakeFiles/word_memorizer.dir/src/MainWindow.cpp.o: CMakeFiles/word_memorizer.dir/flags.make
 CMakeFiles/word_memorizer.dir/src/MainWindow.cpp.o: ../src/MainWindow.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/lsoi_01/Word Revision/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/word_memorizer.dir/src/MainWindow.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/word_memorizer.dir/src/MainWindow.cpp.o -c "/home/lsoi_01/Word Revision/src/MainWindow.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/lsoi_01/76E8-CACF/Word Memorizer/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/word_memorizer.dir/src/MainWindow.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/word_memorizer.dir/src/MainWindow.cpp.o -c "/media/lsoi_01/76E8-CACF/Word Memorizer/src/MainWindow.cpp"
 
 CMakeFiles/word_memorizer.dir/src/MainWindow.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/word_memorizer.dir/src/MainWindow.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lsoi_01/Word Revision/src/MainWindow.cpp" > CMakeFiles/word_memorizer.dir/src/MainWindow.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/media/lsoi_01/76E8-CACF/Word Memorizer/src/MainWindow.cpp" > CMakeFiles/word_memorizer.dir/src/MainWindow.cpp.i
 
 CMakeFiles/word_memorizer.dir/src/MainWindow.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/word_memorizer.dir/src/MainWindow.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lsoi_01/Word Revision/src/MainWindow.cpp" -o CMakeFiles/word_memorizer.dir/src/MainWindow.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/media/lsoi_01/76E8-CACF/Word Memorizer/src/MainWindow.cpp" -o CMakeFiles/word_memorizer.dir/src/MainWindow.cpp.s
 
 CMakeFiles/word_memorizer.dir/src/WordManager.cpp.o: CMakeFiles/word_memorizer.dir/flags.make
 CMakeFiles/word_memorizer.dir/src/WordManager.cpp.o: ../src/WordManager.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/lsoi_01/Word Revision/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/word_memorizer.dir/src/WordManager.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/word_memorizer.dir/src/WordManager.cpp.o -c "/home/lsoi_01/Word Revision/src/WordManager.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/lsoi_01/76E8-CACF/Word Memorizer/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/word_memorizer.dir/src/WordManager.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/word_memorizer.dir/src/WordManager.cpp.o -c "/media/lsoi_01/76E8-CACF/Word Memorizer/src/WordManager.cpp"
 
 CMakeFiles/word_memorizer.dir/src/WordManager.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/word_memorizer.dir/src/WordManager.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lsoi_01/Word Revision/src/WordManager.cpp" > CMakeFiles/word_memorizer.dir/src/WordManager.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/media/lsoi_01/76E8-CACF/Word Memorizer/src/WordManager.cpp" > CMakeFiles/word_memorizer.dir/src/WordManager.cpp.i
 
 CMakeFiles/word_memorizer.dir/src/WordManager.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/word_memorizer.dir/src/WordManager.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lsoi_01/Word Revision/src/WordManager.cpp" -o CMakeFiles/word_memorizer.dir/src/WordManager.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/media/lsoi_01/76E8-CACF/Word Memorizer/src/WordManager.cpp" -o CMakeFiles/word_memorizer.dir/src/WordManager.cpp.s
 
 CMakeFiles/word_memorizer.dir/src/SettingsManager.cpp.o: CMakeFiles/word_memorizer.dir/flags.make
 CMakeFiles/word_memorizer.dir/src/SettingsManager.cpp.o: ../src/SettingsManager.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/lsoi_01/Word Revision/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/word_memorizer.dir/src/SettingsManager.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/word_memorizer.dir/src/SettingsManager.cpp.o -c "/home/lsoi_01/Word Revision/src/SettingsManager.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/lsoi_01/76E8-CACF/Word Memorizer/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/word_memorizer.dir/src/SettingsManager.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/word_memorizer.dir/src/SettingsManager.cpp.o -c "/media/lsoi_01/76E8-CACF/Word Memorizer/src/SettingsManager.cpp"
 
 CMakeFiles/word_memorizer.dir/src/SettingsManager.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/word_memorizer.dir/src/SettingsManager.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lsoi_01/Word Revision/src/SettingsManager.cpp" > CMakeFiles/word_memorizer.dir/src/SettingsManager.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/media/lsoi_01/76E8-CACF/Word Memorizer/src/SettingsManager.cpp" > CMakeFiles/word_memorizer.dir/src/SettingsManager.cpp.i
 
 CMakeFiles/word_memorizer.dir/src/SettingsManager.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/word_memorizer.dir/src/SettingsManager.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lsoi_01/Word Revision/src/SettingsManager.cpp" -o CMakeFiles/word_memorizer.dir/src/SettingsManager.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/media/lsoi_01/76E8-CACF/Word Memorizer/src/SettingsManager.cpp" -o CMakeFiles/word_memorizer.dir/src/SettingsManager.cpp.s
 
 CMakeFiles/word_memorizer.dir/src/SettingsDialog.cpp.o: CMakeFiles/word_memorizer.dir/flags.make
 CMakeFiles/word_memorizer.dir/src/SettingsDialog.cpp.o: ../src/SettingsDialog.cpp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/home/lsoi_01/Word Revision/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/word_memorizer.dir/src/SettingsDialog.cpp.o"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/word_memorizer.dir/src/SettingsDialog.cpp.o -c "/home/lsoi_01/Word Revision/src/SettingsDialog.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/lsoi_01/76E8-CACF/Word Memorizer/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/word_memorizer.dir/src/SettingsDialog.cpp.o"
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -o CMakeFiles/word_memorizer.dir/src/SettingsDialog.cpp.o -c "/media/lsoi_01/76E8-CACF/Word Memorizer/src/SettingsDialog.cpp"
 
 CMakeFiles/word_memorizer.dir/src/SettingsDialog.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/word_memorizer.dir/src/SettingsDialog.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/home/lsoi_01/Word Revision/src/SettingsDialog.cpp" > CMakeFiles/word_memorizer.dir/src/SettingsDialog.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "/media/lsoi_01/76E8-CACF/Word Memorizer/src/SettingsDialog.cpp" > CMakeFiles/word_memorizer.dir/src/SettingsDialog.cpp.i
 
 CMakeFiles/word_memorizer.dir/src/SettingsDialog.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/word_memorizer.dir/src/SettingsDialog.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/home/lsoi_01/Word Revision/src/SettingsDialog.cpp" -o CMakeFiles/word_memorizer.dir/src/SettingsDialog.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "/media/lsoi_01/76E8-CACF/Word Memorizer/src/SettingsDialog.cpp" -o CMakeFiles/word_memorizer.dir/src/SettingsDialog.cpp.s
 
 # Object files for target word_memorizer
 word_memorizer_OBJECTS = \
@@ -140,7 +140,7 @@ word_memorizer: CMakeFiles/word_memorizer.dir/src/SettingsManager.cpp.o
 word_memorizer: CMakeFiles/word_memorizer.dir/src/SettingsDialog.cpp.o
 word_memorizer: CMakeFiles/word_memorizer.dir/build.make
 word_memorizer: CMakeFiles/word_memorizer.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/home/lsoi_01/Word Revision/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable word_memorizer"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/media/lsoi_01/76E8-CACF/Word Memorizer/build/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Linking CXX executable word_memorizer"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/word_memorizer.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -153,6 +153,6 @@ CMakeFiles/word_memorizer.dir/clean:
 .PHONY : CMakeFiles/word_memorizer.dir/clean
 
 CMakeFiles/word_memorizer.dir/depend:
-	cd "/home/lsoi_01/Word Revision/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/home/lsoi_01/Word Revision" "/home/lsoi_01/Word Revision" "/home/lsoi_01/Word Revision/build" "/home/lsoi_01/Word Revision/build" "/home/lsoi_01/Word Revision/build/CMakeFiles/word_memorizer.dir/DependInfo.cmake" --color=$(COLOR)
+	cd "/media/lsoi_01/76E8-CACF/Word Memorizer/build" && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "/media/lsoi_01/76E8-CACF/Word Memorizer" "/media/lsoi_01/76E8-CACF/Word Memorizer" "/media/lsoi_01/76E8-CACF/Word Memorizer/build" "/media/lsoi_01/76E8-CACF/Word Memorizer/build" "/media/lsoi_01/76E8-CACF/Word Memorizer/build/CMakeFiles/word_memorizer.dir/DependInfo.cmake" --color=$(COLOR)
 .PHONY : CMakeFiles/word_memorizer.dir/depend
 

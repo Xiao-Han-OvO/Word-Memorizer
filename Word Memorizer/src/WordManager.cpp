@@ -1,5 +1,6 @@
 #include "WordManager.h"
 #include <random>
+#include <iostream>
 
 WordManager::WordManager() : rng(std::random_device{}()) {}
 
@@ -7,6 +8,7 @@ bool WordManager::loadWordsFromFile(const std::string& filename) {
     words.clear();
     wrongWords.clear();
     masteredWords.clear();
+    failedWords.clear();
     std::ifstream file(filename);
     
     if (!file.is_open()) {
@@ -63,19 +65,38 @@ Word WordManager::getRandomWord() {
 bool WordManager::addWrongWord(const Word& word) {
     // 检查是否已经存在该错词
     if (wrongWords.find(word) != wrongWords.end()) {
+        std::cout << "错词已存在: " << word.word << std::endl;
         return false; // 已经存在，不重复添加
     }
     
     wrongWords.insert(word);
+    std::cout << "添加错词: " << word.word << "，当前错词数量: " << wrongWords.size() << std::endl;
     return true; // 成功添加
+}
+
+void WordManager::addFailedWord(const std::string& word) {
+    failedWords.insert(word);
 }
 
 void WordManager::addMasteredWord(const std::string& word) {
     masteredWords.insert(word);
+    // 如果单词被掌握，就从失败列表中移除
+    failedWords.erase(word);
 }
 
 std::vector<Word> WordManager::getWrongWords() const {
-    return std::vector<Word>(wrongWords.begin(), wrongWords.end());
+    std::cout << "getWrongWords() 被调用，返回 " << wrongWords.size() << " 个错词" << std::endl;
+    
+    // 创建一个临时的vector来返回
+    std::vector<Word> result;
+    result.reserve(wrongWords.size());
+    
+    for (const auto& word : wrongWords) {
+        result.push_back(word);
+        std::cout << "  返回错词: " << word.word << std::endl;
+    }
+    
+    return result;
 }
 
 void WordManager::clearWrongWords() {
@@ -109,4 +130,8 @@ bool WordManager::allWordsMastered() const {
 float WordManager::getProgress() const {
     if (words.empty()) return 0.0f;
     return static_cast<float>(masteredWords.size()) / words.size();
+}
+
+bool WordManager::hasFailed(const std::string& word) const {
+    return failedWords.find(word) != failedWords.end();
 }

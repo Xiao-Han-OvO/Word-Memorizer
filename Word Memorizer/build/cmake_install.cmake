@@ -1,4 +1,4 @@
-# Install script for directory: /home/lsoi_01/Word Revision
+# Install script for directory: /media/lsoi_01/76E8-CACF/Word Memorizer
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/lsoi_01/Word Revision/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/media/lsoi_01/76E8-CACF/Word Memorizer/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

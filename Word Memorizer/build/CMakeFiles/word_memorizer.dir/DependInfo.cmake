@@ -4,11 +4,11 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/lsoi_01/Word Revision/src/MainWindow.cpp" "/home/lsoi_01/Word Revision/build/CMakeFiles/word_memorizer.dir/src/MainWindow.cpp.o"
-  "/home/lsoi_01/Word Revision/src/SettingsDialog.cpp" "/home/lsoi_01/Word Revision/build/CMakeFiles/word_memorizer.dir/src/SettingsDialog.cpp.o"
-  "/home/lsoi_01/Word Revision/src/SettingsManager.cpp" "/home/lsoi_01/Word Revision/build/CMakeFiles/word_memorizer.dir/src/SettingsManager.cpp.o"
-  "/home/lsoi_01/Word Revision/src/WordManager.cpp" "/home/lsoi_01/Word Revision/build/CMakeFiles/word_memorizer.dir/src/WordManager.cpp.o"
-  "/home/lsoi_01/Word Revision/src/main.cpp" "/home/lsoi_01/Word Revision/build/CMakeFiles/word_memorizer.dir/src/main.cpp.o"
+  "/media/lsoi_01/76E8-CACF/Word Memorizer/src/MainWindow.cpp" "/media/lsoi_01/76E8-CACF/Word Memorizer/build/CMakeFiles/word_memorizer.dir/src/MainWindow.cpp.o"
+  "/media/lsoi_01/76E8-CACF/Word Memorizer/src/SettingsDialog.cpp" "/media/lsoi_01/76E8-CACF/Word Memorizer/build/CMakeFiles/word_memorizer.dir/src/SettingsDialog.cpp.o"
+  "/media/lsoi_01/76E8-CACF/Word Memorizer/src/SettingsManager.cpp" "/media/lsoi_01/76E8-CACF/Word Memorizer/build/CMakeFiles/word_memorizer.dir/src/SettingsManager.cpp.o"
+  "/media/lsoi_01/76E8-CACF/Word Memorizer/src/WordManager.cpp" "/media/lsoi_01/76E8-CACF/Word Memorizer/build/CMakeFiles/word_memorizer.dir/src/WordManager.cpp.o"
+  "/media/lsoi_01/76E8-CACF/Word Memorizer/src/main.cpp" "/media/lsoi_01/76E8-CACF/Word Memorizer/build/CMakeFiles/word_memorizer.dir/src/main.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

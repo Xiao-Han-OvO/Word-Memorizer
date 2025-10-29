@@ -6,39 +6,43 @@
 
 #IncludeRegexTransform: 
 
-/home/lsoi_01/Word Revision/src/MainWindow.cpp
+/media/lsoi_01/76E8-CACF/Word Memorizer/src/MainWindow.cpp
 MainWindow.h
-/home/lsoi_01/Word Revision/src/MainWindow.h
+/media/lsoi_01/76E8-CACF/Word Memorizer/src/MainWindow.h
+SettingsDialog.h
+/media/lsoi_01/76E8-CACF/Word Memorizer/src/SettingsDialog.h
 iostream
 -
 iomanip
 -
+algorithm
+-
 
-/home/lsoi_01/Word Revision/src/MainWindow.h
+/media/lsoi_01/76E8-CACF/Word Memorizer/src/MainWindow.h
 gtkmm.h
 -
 WordManager.h
-/home/lsoi_01/Word Revision/src/WordManager.h
+/media/lsoi_01/76E8-CACF/Word Memorizer/src/WordManager.h
 SettingsManager.h
-/home/lsoi_01/Word Revision/src/SettingsManager.h
+/media/lsoi_01/76E8-CACF/Word Memorizer/src/SettingsManager.h
 SettingsDialog.h
-/home/lsoi_01/Word Revision/src/SettingsDialog.h
+/media/lsoi_01/76E8-CACF/Word Memorizer/src/SettingsDialog.h
 
-/home/lsoi_01/Word Revision/src/SettingsDialog.cpp
+/media/lsoi_01/76E8-CACF/Word Memorizer/src/SettingsDialog.cpp
 SettingsDialog.h
-/home/lsoi_01/Word Revision/src/SettingsDialog.h
+/media/lsoi_01/76E8-CACF/Word Memorizer/src/SettingsDialog.h
 iostream
 -
 
-/home/lsoi_01/Word Revision/src/SettingsDialog.h
+/media/lsoi_01/76E8-CACF/Word Memorizer/src/SettingsDialog.h
 gtkmm.h
 -
 SettingsManager.h
-/home/lsoi_01/Word Revision/src/SettingsManager.h
+/media/lsoi_01/76E8-CACF/Word Memorizer/src/SettingsManager.h
 
-/home/lsoi_01/Word Revision/src/SettingsManager.cpp
+/media/lsoi_01/76E8-CACF/Word Memorizer/src/SettingsManager.cpp
 SettingsManager.h
-/home/lsoi_01/Word Revision/src/SettingsManager.h
+/media/lsoi_01/76E8-CACF/Word Memorizer/src/SettingsManager.h
 fstream
 -
 iostream
@@ -46,19 +50,21 @@ iostream
 cstdlib
 -
 
-/home/lsoi_01/Word Revision/src/SettingsManager.h
+/media/lsoi_01/76E8-CACF/Word Memorizer/src/SettingsManager.h
 string
 -
 map
 -
 
-/home/lsoi_01/Word Revision/src/WordManager.cpp
+/media/lsoi_01/76E8-CACF/Word Memorizer/src/WordManager.cpp
 WordManager.h
-/home/lsoi_01/Word Revision/src/WordManager.h
+/media/lsoi_01/76E8-CACF/Word Memorizer/src/WordManager.h
 random
 -
+iostream
+-
 
-/home/lsoi_01/Word Revision/src/WordManager.h
+/media/lsoi_01/76E8-CACF/Word Memorizer/src/WordManager.h
 vector
 -
 string
@@ -73,10 +79,12 @@ algorithm
 -
 unordered_set
 -
+unordered_map
+-
 
-/home/lsoi_01/Word Revision/src/main.cpp
+/media/lsoi_01/76E8-CACF/Word Memorizer/src/main.cpp
 MainWindow.h
-/home/lsoi_01/Word Revision/src/MainWindow.h
+/media/lsoi_01/76E8-CACF/Word Memorizer/src/MainWindow.h
 gtkmm/application.h
 -
 

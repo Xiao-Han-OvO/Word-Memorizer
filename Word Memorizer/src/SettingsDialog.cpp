@@ -5,6 +5,9 @@ SettingsDialog::SettingsDialog(Gtk::Window& parent, SettingsManager& settings)
     : Dialog("主题设置", parent, true),
       settingsManager(settings),
       mainBox(Gtk::ORIENTATION_VERTICAL),
+      themeBox(Gtk::ORIENTATION_VERTICAL),
+      darkModeBox(Gtk::ORIENTATION_HORIZONTAL),
+      colorThemeBox(Gtk::ORIENTATION_HORIZONTAL),
       colorBox(Gtk::ORIENTATION_VERTICAL),
       posColorBox(Gtk::ORIENTATION_HORIZONTAL),
       correctColorBox(Gtk::ORIENTATION_HORIZONTAL),
@@ -12,16 +15,64 @@ SettingsDialog::SettingsDialog(Gtk::Window& parent, SettingsManager& settings)
       answerColorBox(Gtk::ORIENTATION_HORIZONTAL),
       buttonBox(Gtk::ORIENTATION_HORIZONTAL) {
     
-    set_default_size(400, 300);
-    set_border_width(10);
+    set_default_size(400, 550);
+    set_border_width(15);
     
     // 标题
-    titleLabel.set_label("自定义主题颜色");
-    titleLabel.override_font(Pango::FontDescription("Sans Bold 16"));
+    titleLabel.set_label("主题设置");
+    titleLabel.override_font(Pango::FontDescription("Sans Bold 18"));
     mainBox.pack_start(titleLabel, Gtk::PACK_SHRINK);
     
+    // 主题设置框架
+    themeFrame.set_label("明暗主题");
+    themeFrame.set_border_width(10);
+    
+    themeBox.set_spacing(10);
+    themeBox.set_border_width(10);
+    
+    // 深色模式开关
+    darkModeLabel.set_label("深色模式:");
+    darkModeLabel.set_size_request(120, -1);
+    
+    darkModeBox.pack_start(darkModeLabel, Gtk::PACK_SHRINK);
+    darkModeBox.pack_start(darkModeSwitch, Gtk::PACK_SHRINK);
+    
+    themeBox.pack_start(darkModeBox, Gtk::PACK_SHRINK);
+    themeFrame.add(themeBox);
+    
+    mainBox.pack_start(themeFrame, Gtk::PACK_SHRINK);
+    
+    // 颜色主题设置框架
+    colorThemeFrame.set_label("颜色主题");
+    colorThemeFrame.set_border_width(10);
+    
+    colorThemeBox.set_spacing(10);
+    colorThemeBox.set_border_width(10);
+    
+    // 颜色主题选择
+    colorThemeLabel.set_label("主题风格:");
+    colorThemeLabel.set_size_request(120, -1);
+    
+    // 添加颜色主题选项
+    colorThemeCombo.append("blue", "蓝色主题");
+    colorThemeCombo.append("red", "红色主题");
+    colorThemeCombo.append("orange", "橙色主题");
+    colorThemeCombo.append("green", "绿色主题");
+    colorThemeCombo.append("cyan", "青色主题");
+    colorThemeCombo.append("yellow", "黄色主题");
+    colorThemeCombo.append("brown", "棕色主题");
+    colorThemeCombo.append("mono", "黑白主题");
+    colorThemeCombo.append("purple", "紫色主题");
+    colorThemeCombo.append("pink", "粉色主题");
+    
+    colorThemeBox.pack_start(colorThemeLabel, Gtk::PACK_SHRINK);
+    colorThemeBox.pack_start(colorThemeCombo, Gtk::PACK_EXPAND_WIDGET);
+    
+    colorThemeFrame.add(colorThemeBox);
+    mainBox.pack_start(colorThemeFrame, Gtk::PACK_SHRINK);
+    
     // 颜色设置框架
-    colorFrame.set_label("颜色设置");
+    colorFrame.set_label("自定义颜色");
     colorFrame.set_border_width(10);
     
     colorBox.set_spacing(10);
@@ -67,6 +118,8 @@ SettingsDialog::SettingsDialog(Gtk::Window& parent, SettingsManager& settings)
     cancelButton.set_label("取消");
     resetButton.set_label("重置默认");
     
+    saveButton.get_style_context()->add_class("primary");
+    
     buttonBox.pack_start(saveButton, Gtk::PACK_EXPAND_WIDGET);
     buttonBox.pack_start(resetButton, Gtk::PACK_EXPAND_WIDGET);
     buttonBox.pack_start(cancelButton, Gtk::PACK_EXPAND_WIDGET);
@@ -79,9 +132,15 @@ SettingsDialog::SettingsDialog(Gtk::Window& parent, SettingsManager& settings)
     saveButton.signal_clicked().connect(sigc::mem_fun(*this, &SettingsDialog::on_save_clicked));
     cancelButton.signal_clicked().connect(sigc::mem_fun(*this, &SettingsDialog::on_cancel_clicked));
     resetButton.signal_clicked().connect(sigc::mem_fun(*this, &SettingsDialog::on_reset_clicked));
+    darkModeSwitch.property_active().signal_changed().connect(
+        sigc::mem_fun(*this, &SettingsDialog::on_dark_mode_toggled));
+    colorThemeCombo.signal_changed().connect(
+        sigc::mem_fun(*this, &SettingsDialog::on_color_theme_changed));
     
-    // 加载当前颜色
+    // 加载当前设置
     load_current_colors();
+    load_current_theme();
+    darkModeSwitch.set_active(settingsManager.isDarkModeEnabled());
     
     show_all_children();
 }
@@ -107,12 +166,25 @@ void SettingsDialog::load_current_colors() {
     answerColorButton.set_rgba(color);
 }
 
+void SettingsDialog::load_current_theme() {
+    std::string currentTheme = settingsManager.getColorTheme();
+    colorThemeCombo.set_active_id(currentTheme);
+}
+
 void SettingsDialog::on_save_clicked() {
     // 保存颜色设置
     settingsManager.setPosColor(posColorButton.get_rgba().to_string());
     settingsManager.setCorrectColor(correctColorButton.get_rgba().to_string());
     settingsManager.setErrorColor(errorColorButton.get_rgba().to_string());
     settingsManager.setAnswerColor(answerColorButton.get_rgba().to_string());
+    
+    // 保存深色模式设置
+    settingsManager.setDarkModeEnabled(darkModeSwitch.get_active());
+    
+    // 保存颜色主题
+    if (colorThemeCombo.get_active_id() != "") {
+        settingsManager.setColorTheme(colorThemeCombo.get_active_id());
+    }
     
     response(Gtk::RESPONSE_OK);
 }
@@ -125,15 +197,35 @@ void SettingsDialog::on_reset_clicked() {
     // 重置为默认颜色
     Gdk::RGBA color;
     
-    color.set("blue");
+    // 使用系统主题友好的颜色
+    color.set("rgb(52,152,219)");  // 蓝色
     posColorButton.set_rgba(color);
     
-    color.set("green");
+    color.set("rgb(46,204,113)");  // 绿色
     correctColorButton.set_rgba(color);
     
-    color.set("red");
+    color.set("rgb(231,76,60)");   // 红色
     errorColorButton.set_rgba(color);
     
-    color.set("blue");
+    color.set("rgb(155,89,182)");  // 紫色
     answerColorButton.set_rgba(color);
+    
+    // 重置颜色主题为蓝色
+    colorThemeCombo.set_active_id("blue");
+    
+    // 重置深色模式为系统检测
+    settingsManager.setDarkModeEnabled(settingsManager.detectSystemDarkMode());
+    darkModeSwitch.set_active(settingsManager.isDarkModeEnabled());
+}
+
+void SettingsDialog::on_dark_mode_toggled() {
+    // 实时切换深色模式预览
+    settingsManager.setDarkModeEnabled(darkModeSwitch.get_active());
+}
+
+void SettingsDialog::on_color_theme_changed() {
+    // 实时切换颜色主题预览
+    if (colorThemeCombo.get_active_id() != "") {
+        settingsManager.setColorTheme(colorThemeCombo.get_active_id());
+    }
 }

@@ -15,6 +15,10 @@ private:
     const std::string DEFAULT_ERROR_COLOR = "red";
     const std::string DEFAULT_ANSWER_COLOR = "blue";
     
+    // 主题相关
+    bool darkModeEnabled;
+    std::string colorTheme;
+
 public:
     SettingsManager();
     void loadSettings();
@@ -31,6 +35,23 @@ public:
     void setCorrectColor(const std::string& color);
     void setErrorColor(const std::string& color);
     void setAnswerColor(const std::string& color);
+    
+    // 主题相关方法
+    bool isDarkModeEnabled() const;
+    void setDarkModeEnabled(bool enabled);
+    std::string getColorTheme() const;
+    void setColorTheme(const std::string& theme);
+    
+    bool detectSystemDarkMode();
+    
+    // 主题颜色获取方法
+    std::string getPrimaryColor() const;
+    std::string getSecondaryColor() const;
+    std::string getAccentColor() const;
+    std::string getBackgroundColor() const;
+    std::string getTextColor() const;
+    std::string getCardBackgroundColor() const;
+    std::string getBorderColor() const;
 };
 
 #endif

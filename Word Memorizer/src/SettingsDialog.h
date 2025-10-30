@@ -11,6 +11,20 @@ private:
     Gtk::Box mainBox;
     Gtk::Label titleLabel;
     
+    // 主题设置
+    Gtk::Frame themeFrame;
+    Gtk::Box themeBox;
+    Gtk::Box darkModeBox;
+    Gtk::Label darkModeLabel;
+    Gtk::Switch darkModeSwitch;
+    
+    // 颜色主题设置
+    Gtk::Frame colorThemeFrame;
+    Gtk::Box colorThemeBox;
+    Gtk::Label colorThemeLabel;
+    Gtk::ComboBoxText colorThemeCombo;
+    
+    // 颜色设置
     Gtk::Frame colorFrame;
     Gtk::Box colorBox;
     
@@ -43,7 +57,10 @@ private:
     void on_save_clicked();
     void on_cancel_clicked();
     void on_reset_clicked();
+    void on_dark_mode_toggled();
+    void on_color_theme_changed();
     void load_current_colors();
+    void load_current_theme();
 };
 
 #endif

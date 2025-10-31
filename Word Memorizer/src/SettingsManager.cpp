@@ -210,7 +210,7 @@ std::string SettingsManager::getAccentColor() const {
 }
 
 std::string SettingsManager::getBackgroundColor() const {
-    return darkModeEnabled ? "#1a202c" : "#ffffff";
+    return getThemeBackgroundColor();
 }
 
 std::string SettingsManager::getTextColor() const {
@@ -218,9 +218,92 @@ std::string SettingsManager::getTextColor() const {
 }
 
 std::string SettingsManager::getCardBackgroundColor() const {
-    return darkModeEnabled ? "#2d3748" : "#ffffff";
+    return getThemeCardBackgroundColor();
 }
 
 std::string SettingsManager::getBorderColor() const {
-    return darkModeEnabled ? "#4a5568" : "#e2e8f0";
+    return getThemeBorderColor();
+}
+
+// 在 SettingsManager.cpp 中添加新的方法实现
+
+std::string SettingsManager::getThemeBackgroundColor() const {
+    // 根据颜色主题和明暗模式返回对应的背景色
+    if (darkModeEnabled) {
+        if (colorTheme == "red") return "#161111";
+        else if (colorTheme == "orange") return "#1a140f";
+        else if (colorTheme == "green") return "#0f160f";
+        else if (colorTheme == "cyan") return "#0f1616";
+        else if (colorTheme == "yellow") return "#16160f";
+        else if (colorTheme == "brown") return "#161310";
+        else if (colorTheme == "mono") return "#0a0a0a";
+        else if (colorTheme == "purple") return "#161016";
+        else if (colorTheme == "pink") return "#160f13";
+        else return "#0f141a"; // 默认蓝色深色背景
+    } else {
+        if (colorTheme == "red") return "#fae6e6";
+        else if (colorTheme == "orange") return "#fff4e6";
+        else if (colorTheme == "green") return "#e6f7e6";
+        else if (colorTheme == "cyan") return "#e6f7f7";
+        else if (colorTheme == "yellow") return "#fffde6";
+        else if (colorTheme == "brown") return "#f7f3e6";
+        else if (colorTheme == "mono") return "#f5f5f5";
+        else if (colorTheme == "purple") return "#f3e6f7";
+        else if (colorTheme == "pink") return "#fce6f5";
+        else return "#f0f8ff"; // 默认蓝色浅色背景
+    }
+}
+
+std::string SettingsManager::getThemeCardBackgroundColor() const {
+    // 卡片背景色比主背景色稍深/稍浅
+    if (darkModeEnabled) {
+        if (colorTheme == "red") return "#1e1919";
+        else if (colorTheme == "orange") return "#221c15";
+        else if (colorTheme == "green") return "#151e15";
+        else if (colorTheme == "cyan") return "#151e1e";
+        else if (colorTheme == "yellow") return "#1e1e15";
+        else if (colorTheme == "brown") return "#1e1b16";
+        else if (colorTheme == "mono") return "#121212";
+        else if (colorTheme == "purple") return "#1e151e";
+        else if (colorTheme == "pink") return "#1e1519";
+        else return "#151e25"; // 默认蓝色深色卡片背景
+    } else {
+        if (colorTheme == "red") return "#ffffff";
+        else if (colorTheme == "orange") return "#ffffff";
+        else if (colorTheme == "green") return "#ffffff";
+        else if (colorTheme == "cyan") return "#ffffff";
+        else if (colorTheme == "yellow") return "#ffffff";
+        else if (colorTheme == "brown") return "#ffffff";
+        else if (colorTheme == "mono") return "#ffffff";
+        else if (colorTheme == "purple") return "#ffffff";
+        else if (colorTheme == "pink") return "#ffffff";
+        else return "#ffffff"; // 默认浅色卡片背景保持白色
+    }
+}
+
+std::string SettingsManager::getThemeBorderColor() const {
+    // 边框颜色
+    if (darkModeEnabled) {
+        if (colorTheme == "red") return "#3a2e2e";
+        else if (colorTheme == "orange") return "#3a3225";
+        else if (colorTheme == "green") return "#253a25";
+        else if (colorTheme == "cyan") return "#253a3a";
+        else if (colorTheme == "yellow") return "#3a3a25";
+        else if (colorTheme == "brown") return "#3a3525";
+        else if (colorTheme == "mono") return "#2a2a2a";
+        else if (colorTheme == "purple") return "#3a253a";
+        else if (colorTheme == "pink") return "#3a2532";
+        else return "#25303a"; // 默认蓝色深色边框
+    } else {
+        if (colorTheme == "red") return "#e6d1d1";
+        else if (colorTheme == "orange") return "#e6d9c6";
+        else if (colorTheme == "green") return "#c6e6c6";
+        else if (colorTheme == "cyan") return "#c6e6e6";
+        else if (colorTheme == "yellow") return "#e6e6c6";
+        else if (colorTheme == "brown") return "#e6e0c6";
+        else if (colorTheme == "mono") return "#d5d5d5";
+        else if (colorTheme == "purple") return "#e0c6e6";
+        else if (colorTheme == "pink") return "#e6c6da";
+        else return "#c6d9e6"; // 默认蓝色浅色边框
+    }
 }

@@ -15,7 +15,7 @@ AboutDialog::AboutDialog(Gtk::Window& parent)
     titleLabel.set_margin_bottom(10);
     
     // 版本信息
-    versionLabel.set_label("Ver 2.0.0 Stable");
+    versionLabel.set_label("Ver 2.1.0 Alpha RC 1");
     versionLabel.override_font(Pango::FontDescription("Sans 12"));
     versionLabel.set_margin_bottom(10);
     

@@ -52,6 +52,11 @@ public:
     std::string getTextColor() const;
     std::string getCardBackgroundColor() const;
     std::string getBorderColor() const;
+
+    // 在 SettingsManager.h 的公共方法部分添加
+    std::string getThemeBackgroundColor() const;
+    std::string getThemeCardBackgroundColor() const;
+    std::string getThemeBorderColor() const;
 };
 
 #endif

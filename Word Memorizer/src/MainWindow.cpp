@@ -87,7 +87,7 @@ MainWindow::MainWindow()
             
             // 浅色模式
             ".light-mode {"
-            "   background-color: #ffffff;"
+            // "   background-color: #ffffff;"
             "   color: #1a202c;"
             "}"
             
@@ -181,7 +181,7 @@ MainWindow::MainWindow()
             
             // 深色模式
             ".dark-mode {"
-            "   background-color: #1a202c;"
+            // "   background-color: #1a202c;"
             "   color: #f7fafc;"
             "}"
             
@@ -1213,6 +1213,13 @@ void MainWindow::update_css_style() {
     // 构建动态CSS
     std::string dynamicCSS = 
         "/* 动态主题样式 */\n"
+        ".custom-window {\n"
+        "   background-color: " + backgroundColor + ";\n"
+        "}\n"
+        ".card {\n"
+        "   background-color: " + cardBackgroundColor + ";\n"
+        "   border-color: " + borderColor + ";\n"
+        "}\n"
         ".primary-color { color: " + primaryColor + "; }\n"
         ".secondary-color { color: " + secondaryColor + "; }\n"
         ".accent-color { color: " + accentColor + "; }\n"
@@ -1230,20 +1237,39 @@ void MainWindow::update_css_style() {
         "   background: " + secondaryColor + ";\n"
         "}\n"
         
+        // 普通按钮
+        "button {\n"
+        "   border-color: " + borderColor + ";\n"
+        "}\n"
+        
         // 进度条颜色
         "progressbar progress {\n"
         "   background: " + primaryColor + ";\n"
         "}\n"
         
-        // 输入框焦点颜色
+        // 输入框
+        "entry {\n"
+        "   border-color: " + borderColor + ";\n"
+        "}\n"
         "entry:focus {\n"
         "   border-color: " + primaryColor + ";\n"
         "   box-shadow: 0 0 0 3px " + accentColor + "30;\n"
         "}\n"
         
+        // 状态栏
+        "statusbar {\n"
+        "   background: " + cardBackgroundColor + ";\n"
+        "   border-color: " + borderColor + ";\n"
+        "}\n"
+        
         // 高亮标签颜色
         ".highlight {\n"
         "   color: " + primaryColor + ";\n"
+        "}\n"
+        
+        // 菜单栏
+        "menubar {\n"
+        "   background: " + cardBackgroundColor + ";\n"
         "}\n";
     
     try {

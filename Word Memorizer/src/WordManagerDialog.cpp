@@ -267,49 +267,76 @@ void WordCard::onDeleteClicked() {
 
 // WordManagerDialog 实现
 WordManagerDialog::WordManagerDialog(Gtk::Window& parent)
-    : Dialog("单词管理", parent, true),
-      mainBox(Gtk::ORIENTATION_VERTICAL),
-      wordsContainer(Gtk::ORIENTATION_VERTICAL) {
-    
-    set_default_size(700, 550);
-    
-    // 创建简约工具栏
-    Gtk::Box* toolbar = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL));
-    toolbar->set_spacing(10);
-    toolbar->set_border_width(10);
-    
-    // 简约按钮
-    Gtk::Button* addButton = Gtk::manage(new Gtk::Button("+ 添加"));
-    addButton->set_tooltip_text("添加新单词");
-    
-    Gtk::Button* saveButton = Gtk::manage(new Gtk::Button("💾 保存"));
-    saveButton->set_tooltip_text("保存单词库");
-    
-    Gtk::Button* closeButton = Gtk::manage(new Gtk::Button("✕ 关闭"));
-    closeButton->set_tooltip_text("关闭");
-    
-    // 将按钮添加到工具栏
-    toolbar->pack_start(*addButton, Gtk::PACK_SHRINK);
-    toolbar->pack_start(*saveButton, Gtk::PACK_SHRINK);
-    toolbar->pack_end(*closeButton, Gtk::PACK_SHRINK);
-    
-    // 滚动窗口
-    scrolledWindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
-    scrolledWindow.add(wordsContainer);
-    
-    // 主布局
-    mainBox.set_spacing(0);
-    mainBox.pack_start(*toolbar, Gtk::PACK_SHRINK);
-    mainBox.pack_start(scrolledWindow, Gtk::PACK_EXPAND_WIDGET);
-    
-    get_content_area()->pack_start(mainBox);
-    
-    // 连接信号
-    addButton->signal_clicked().connect(sigc::mem_fun(*this, &WordManagerDialog::on_add_button_clicked));
-    saveButton->signal_clicked().connect(sigc::mem_fun(*this, &WordManagerDialog::on_save_all_clicked));
-    closeButton->signal_clicked().connect(sigc::mem_fun(*this, &WordManagerDialog::on_close_clicked));
-    
-    show_all_children();
+   : Dialog("单词管理", parent, true),
+   mainBox(Gtk::ORIENTATION_VERTICAL),
+   wordsContainer(Gtk::ORIENTATION_VERTICAL) {
+   
+   // 移除标题栏和边框
+   set_decorated(false);
+   set_default_size(700, 550);
+   
+   // 创建自定义标题栏
+   Gtk::Box* titlebarBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 0));
+   titlebarBox->set_border_width(8);
+   titlebarBox->set_halign(Gtk::ALIGN_FILL);
+   titlebarBox->set_hexpand(true);
+   titlebarBox->get_style_context()->add_class("custom-titlebar");
+   
+   // 窗口标题
+   Gtk::Label* dialogTitle = Gtk::manage(new Gtk::Label("单词管理"));
+   dialogTitle->set_halign(Gtk::ALIGN_START);
+   dialogTitle->set_hexpand(true);
+   dialogTitle->get_style_context()->add_class("custom-titlebar-label");
+   
+   // 关闭按钮
+   Gtk::Button* closeBtn = Gtk::manage(new Gtk::Button("×"));
+   closeBtn->get_style_context()->add_class("custom-window-control");
+   closeBtn->get_style_context()->add_class("close");
+   closeBtn->set_tooltip_text("关闭");
+   closeBtn->set_size_request(16, 16);
+   
+   titlebarBox->pack_start(*dialogTitle, Gtk::PACK_EXPAND_WIDGET);
+   titlebarBox->pack_end(*closeBtn, Gtk::PACK_SHRINK);
+   
+   // 创建简约工具栏
+   Gtk::Box* toolbar = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL));
+   toolbar->set_spacing(10);
+   toolbar->set_border_width(10);
+   
+   // 简约按钮
+   Gtk::Button* addButton = Gtk::manage(new Gtk::Button("+ 添加"));
+   addButton->set_tooltip_text("添加新单词");
+   
+   Gtk::Button* saveButton = Gtk::manage(new Gtk::Button("💾 保存"));
+   saveButton->set_tooltip_text("保存单词库");
+   
+   Gtk::Button* closeButton = Gtk::manage(new Gtk::Button("✕ 关闭"));
+   closeButton->set_tooltip_text("关闭");
+   
+   // 将按钮添加到工具栏
+   toolbar->pack_start(*addButton, Gtk::PACK_SHRINK);
+   toolbar->pack_start(*saveButton, Gtk::PACK_SHRINK);
+   toolbar->pack_end(*closeButton, Gtk::PACK_SHRINK);
+   
+   // 滚动窗口
+   scrolledWindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+   scrolledWindow.add(wordsContainer);
+   
+   // 主布局
+   mainBox.set_spacing(0);
+   mainBox.pack_start(*titlebarBox, Gtk::PACK_SHRINK);  // 添加自定义标题栏
+   mainBox.pack_start(*toolbar, Gtk::PACK_SHRINK);
+   mainBox.pack_start(scrolledWindow, Gtk::PACK_EXPAND_WIDGET);
+   
+   get_content_area()->pack_start(mainBox);
+   
+   // 连接信号
+   addButton->signal_clicked().connect(sigc::mem_fun(*this, &WordManagerDialog::on_add_button_clicked));
+   saveButton->signal_clicked().connect(sigc::mem_fun(*this, &WordManagerDialog::on_save_all_clicked));
+   closeButton->signal_clicked().connect(sigc::mem_fun(*this, &WordManagerDialog::on_close_clicked));
+   closeBtn->signal_clicked().connect(sigc::mem_fun(*this, &WordManagerDialog::on_close_clicked));
+   
+   show_all_children();
 }
 
 WordManagerDialog::~WordManagerDialog() {

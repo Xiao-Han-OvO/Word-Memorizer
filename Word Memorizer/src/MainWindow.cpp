@@ -18,7 +18,7 @@ MainWindow::MainWindow()
       drag_y(0) {
     
     // 设置窗口属性 - 移除标题栏
-    set_title("单词记忆大师");
+    set_title("VocabMemster");
     set_default_size(600, 500);
     set_decorated(false); // 移除标题栏和边框
     
@@ -290,6 +290,35 @@ MainWindow::MainWindow()
             "   border-top: 1px solid #4a5568;"
             "   padding: 8px;"
             "}"
+            // 在现有的CSS样式中添加以下内容：
+
+            // 对话框样式
+            "GtkDialog {\n"
+            "   background: inherit;\n"
+            "}\n"
+
+            ".dialog-container {\n"
+            "   background: inherit;\n"
+            "}\n"
+
+            // 确保对话框内的卡片样式正确
+            ".light-mode .card {\n"
+            "   background: #ffffff;\n"
+            "   border: 1px solid #e2e8f0;\n"
+            "   border-radius: 8px;\n"
+            "   padding: 20px;\n"
+            "   margin: 10px 0;\n"
+            "   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);\n"
+            "}\n"
+
+            ".dark-mode .card {\n"
+            "   background: #2d3748;\n"
+            "   border: 1px solid #4a5568;\n"
+            "   border-radius: 8px;\n"
+            "   padding: 20px;\n"
+            "   margin: 10px 0;\n"
+            "   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);\n"
+            "}\n"
         );
         
         apply_theme();
@@ -625,10 +654,62 @@ void MainWindow::on_usage() {
 }
 
 void MainWindow::apply_dialog_theme(Gtk::Window& dialog) {
+    // 移除可能存在的主题类
+    auto styleContext = dialog.get_style_context();
+    styleContext->remove_class("light-mode");
+    styleContext->remove_class("dark-mode");
+    
+    // 应用当前主题
     if (settingsManager.isDarkModeEnabled()) {
-        dialog.get_style_context()->add_class("dark-mode");
+        styleContext->add_class("dark-mode");
+        
+        // 对于对话框类型，尝试获取内容区域
+        if (auto dialogPtr = dynamic_cast<Gtk::Dialog*>(&dialog)) {
+            auto contentArea = dialogPtr->get_content_area();
+            contentArea->get_style_context()->add_class("dark-mode");
+        }
     } else {
-        dialog.get_style_context()->add_class("light-mode");
+        styleContext->add_class("light-mode");
+        
+        // 对于对话框类型，尝试获取内容区域
+        if (auto dialogPtr = dynamic_cast<Gtk::Dialog*>(&dialog)) {
+            auto contentArea = dialogPtr->get_content_area();
+            contentArea->get_style_context()->add_class("light-mode");
+        }
+    }
+    
+    // 确保对话框使用相同的CSS提供器
+    auto cssProvider = Gtk::CssProvider::create();
+    try {
+        // 重新应用与主窗口相同的CSS
+        std::string dynamicCSS = 
+            "/* 对话框动态主题样式 */\n"
+            ".light-mode {\n"
+            "   background-color: " + settingsManager.getBackgroundColor() + ";\n"
+            "   color: " + settingsManager.getTextColor() + ";\n"
+            "}\n"
+            ".dark-mode {\n"
+            "   background-color: " + settingsManager.getBackgroundColor() + ";\n"
+            "   color: " + settingsManager.getTextColor() + ";\n"
+            "}\n"
+            ".light-mode .card {\n"
+            "   background: " + settingsManager.getCardBackgroundColor() + ";\n"
+            "   border-color: " + settingsManager.getBorderColor() + ";\n"
+            "}\n"
+            ".dark-mode .card {\n"
+            "   background: " + settingsManager.getCardBackgroundColor() + ";\n"
+            "   border-color: " + settingsManager.getBorderColor() + ";\n"
+            "}\n";
+        
+        cssProvider->load_from_data(dynamicCSS);
+        
+        Gtk::StyleContext::add_provider_for_screen(
+            dialog.get_screen(),
+            cssProvider,
+            GTK_STYLE_PROVIDER_PRIORITY_APPLICATION
+        );
+    } catch (const Gtk::CssProviderError& ex) {
+        std::cerr << "对话框CSS加载错误: " << ex.what() << std::endl;
     }
 }
 
@@ -662,6 +743,7 @@ void MainWindow::on_open_file() {
             statusbar.push("已加载单词库: " + filename);
         } else {
             Gtk::MessageDialog errorDialog(*this, "无法加载单词库文件", false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
+            errorDialog.set_decorated(false);  // 移除标题栏
             apply_dialog_theme(errorDialog);
             errorDialog.run();
         }
@@ -674,6 +756,7 @@ void MainWindow::on_edit_words() {
     
     // 可以选择加载当前单词库或创建新的
     Gtk::MessageDialog choiceDialog(*this, "选择操作", false, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_NONE, true);
+    choiceDialog.set_decorated(false);  // 移除标题栏
     choiceDialog.add_button("创建新单词库", 1);
     choiceDialog.add_button("加载现有单词库", 2);
     choiceDialog.add_button("取消", 3);
@@ -827,6 +910,7 @@ void MainWindow::on_export_wrong_words() {
     
     if (wrongWords.empty()) {
         Gtk::MessageDialog infoDialog(*this, "错词本为空，无法导出", false, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK, true);
+        infoDialog.set_decorated(false);  // 移除标题栏
         apply_dialog_theme(infoDialog);
         infoDialog.run();
         return;
@@ -871,10 +955,12 @@ void MainWindow::on_export_wrong_words() {
             Gtk::MessageDialog successDialog(*this, 
                 "错词本已成功导出到文件: " + filename, 
                 false, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK, true);
+            successDialog.set_decorated(false);  // 移除标题栏
             apply_dialog_theme(successDialog);
             successDialog.run();
         } else {
             Gtk::MessageDialog errorDialog(*this, "无法保存文件", false, Gtk::MESSAGE_ERROR, Gtk::BUTTONS_OK, true);
+            errorDialog.set_decorated(false);  // 移除标题栏
             apply_dialog_theme(errorDialog);
             errorDialog.run();
         }
@@ -886,6 +972,7 @@ void MainWindow::on_review_wrong_words() {
     
     if (wrongWords.empty()) {
         Gtk::MessageDialog infoDialog(*this, "错词本为空", false, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK, true);
+        infoDialog.set_decorated(false);  // 移除标题栏
         apply_dialog_theme(infoDialog);
         infoDialog.run();
         return;
@@ -1000,6 +1087,7 @@ void MainWindow::on_review_wrong_words() {
     clearButton.signal_clicked().connect([this, &wrongWordsDialog]() {
         Gtk::MessageDialog confirmDialog(wrongWordsDialog, "确定要清空错词本吗？", false, 
                                         Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_YES_NO, true);
+        confirmDialog.set_decorated(false);  // 移除标题栏
         this->apply_dialog_theme(confirmDialog);  // 使用 this-> 明确调用
         if (confirmDialog.run() == Gtk::RESPONSE_YES) {
             wordManager.clearWrongWords();
@@ -1079,6 +1167,7 @@ void MainWindow::on_debug_info() {
     debugInfo << "答案颜色: " << settingsManager.getAnswerColor() << "\n";
     
     Gtk::MessageDialog dialog(*this, debugInfo.str(), false, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK, true);
+    dialog.set_decorated(false);  // 移除标题栏
     apply_dialog_theme(dialog);
     dialog.set_title("调试信息");
     dialog.run();

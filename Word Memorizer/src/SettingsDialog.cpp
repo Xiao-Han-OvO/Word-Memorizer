@@ -15,12 +15,38 @@ SettingsDialog::SettingsDialog(Gtk::Window& parent, SettingsManager& settings)
       answerColorBox(Gtk::ORIENTATION_HORIZONTAL),
       buttonBox(Gtk::ORIENTATION_HORIZONTAL) {
     
+    // 移除标题栏和边框
+    set_decorated(false);
     set_default_size(400, 550);
     set_border_width(15);
+    
+    // 创建自定义标题栏
+    Gtk::Box* titlebarBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 0));
+    titlebarBox->set_border_width(8);
+    titlebarBox->set_halign(Gtk::ALIGN_FILL);
+    titlebarBox->set_hexpand(true);
+    titlebarBox->get_style_context()->add_class("custom-titlebar");
+    
+    // 窗口标题
+    Gtk::Label* dialogTitle = Gtk::manage(new Gtk::Label("主题设置"));
+    dialogTitle->set_halign(Gtk::ALIGN_START);
+    dialogTitle->set_hexpand(true);
+    dialogTitle->get_style_context()->add_class("custom-titlebar-label");
+    
+    // 关闭按钮
+    Gtk::Button* closeBtn = Gtk::manage(new Gtk::Button("×"));
+    closeBtn->get_style_context()->add_class("custom-window-control");
+    closeBtn->get_style_context()->add_class("close");
+    closeBtn->set_tooltip_text("关闭");
+    closeBtn->set_size_request(16, 16);
+    
+    titlebarBox->pack_start(*dialogTitle, Gtk::PACK_EXPAND_WIDGET);
+    titlebarBox->pack_end(*closeBtn, Gtk::PACK_SHRINK);
     
     // 标题
     titleLabel.set_label("主题设置");
     titleLabel.override_font(Pango::FontDescription("Sans Bold 18"));
+    mainBox.pack_start(*titlebarBox, Gtk::PACK_SHRINK);  // 添加自定义标题栏
     mainBox.pack_start(titleLabel, Gtk::PACK_SHRINK);
     
     // 主题设置框架
@@ -129,6 +155,7 @@ SettingsDialog::SettingsDialog(Gtk::Window& parent, SettingsManager& settings)
     get_content_area()->pack_start(mainBox);
     
     // 连接信号
+    closeBtn->signal_clicked().connect([this]() {response(Gtk::RESPONSE_CANCEL);});
     saveButton.signal_clicked().connect(sigc::mem_fun(*this, &SettingsDialog::on_save_clicked));
     cancelButton.signal_clicked().connect(sigc::mem_fun(*this, &SettingsDialog::on_cancel_clicked));
     resetButton.signal_clicked().connect(sigc::mem_fun(*this, &SettingsDialog::on_reset_clicked));

@@ -41,7 +41,7 @@ AboutDialog::AboutDialog(Gtk::Window& parent)
    titleLabel.get_style_context()->add_class("title");
    
    // 版本信息
-   versionLabel.set_label("Ver 2.1.0 Beta RC 1");
+   versionLabel.set_label("Ver 2.1.0 Beta RC 2");
    versionLabel.override_font(Pango::FontDescription("Sans 12"));
    versionLabel.set_margin_bottom(10);
    versionLabel.get_style_context()->add_class("subtitle");

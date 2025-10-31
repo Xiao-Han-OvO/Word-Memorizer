@@ -121,7 +121,7 @@ UsageDialog::UsageDialog(Gtk::Window& parent)
    • 重置应用程序：<i>文件 → 重置进度</i>
    • 检查单词文件格式是否正确
 
-   <span foreground="#2c3e50" font_desc="Sans Italic 10">版本 2.1.0 Beta RC 1 - 设计用于高效单词记忆</span>
+   <span foreground="#2c3e50" font_desc="Sans Italic 10">版本 2.1.0 Beta RC 2 - 设计用于高效单词记忆</span>
    )";
 
    contentLabel.set_markup(usageText);

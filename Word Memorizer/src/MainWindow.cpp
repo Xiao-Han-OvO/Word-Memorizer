@@ -767,9 +767,12 @@ void MainWindow::on_edit_words() {
     
     if (result == 1) {
         // 创建新的，直接显示空的管理器
+        choiceDialog.hide();  // 隐藏选择对话框
         dialog.run();
     } else if (result == 2) {
         // 加载现有单词库
+        choiceDialog.hide();  // 先隐藏选择对话框
+        
         Gtk::FileChooserDialog fileDialog("选择单词库文件", Gtk::FILE_CHOOSER_ACTION_OPEN);
         fileDialog.set_transient_for(*this);
         
@@ -787,8 +790,13 @@ void MainWindow::on_edit_words() {
         
         if (fileResult == Gtk::RESPONSE_OK) {
             std::string filename = fileDialog.get_filename();
+            fileDialog.hide();  // 重要：在获取文件名后立即隐藏文件选择对话框
             dialog.loadWordsFromFile(filename);
             dialog.run();
+        } else {
+            // 用户取消了文件选择，直接返回
+            fileDialog.hide();
+            return;
         }
     }
     // 如果选择取消，什么都不做

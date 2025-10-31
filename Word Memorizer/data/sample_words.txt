@@ -1,8 +1,0 @@
-apple|n.|苹果|I eat an apple every day.
-book|n.|书|This is an interesting book.
-computer|n.|电脑|I use computer for work.
-run|v.|跑步|I run every morning.
-beautiful|adj.|美丽的|She has a beautiful voice.
-language|n.|语言|English is an international language.
-programming|n.|编程|Programming requires logical thinking.
-memory|n.|记忆|Memory is important for learning.

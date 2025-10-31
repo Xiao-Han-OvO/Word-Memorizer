@@ -1,3 +1,0 @@
-/media/lsoi_01/76E8-CACF/Word Memorizer/build/CMakeFiles/rebuild_cache.dir
-/media/lsoi_01/76E8-CACF/Word Memorizer/build/CMakeFiles/edit_cache.dir
-/media/lsoi_01/76E8-CACF/Word Memorizer/build/CMakeFiles/word_memorizer.dir

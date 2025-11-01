@@ -3,16 +3,17 @@
 
 #include <gtkmm.h>
 
+// 使用说明对话框类
 class UsageDialog : public Gtk::Dialog {
 private:
-    Gtk::Box mainBox;
-    Gtk::ScrolledWindow scrolledWindow;
-    Gtk::Label contentLabel;
-    Gtk::Button closeButton;
+	Gtk::Box mainBox;
+	Gtk::ScrolledWindow scrolledWindow;
+	Gtk::Label contentLabel;
+	Gtk::Button closeButton;
 
 public:
-    UsageDialog(Gtk::Window& parent);
-    virtual ~UsageDialog();
+	UsageDialog(Gtk::Window& parent);
+	virtual ~UsageDialog();
 };
 
 #endif // USAGEDIALOG_H

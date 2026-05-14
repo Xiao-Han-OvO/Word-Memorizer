@@ -26,7 +26,8 @@ int main(int argc, char *argv[])
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreationFailed,
                      &app, []() { QCoreApplication::exit(-1); }, Qt::QueuedConnection);
 
-    engine.loadFromModule("WordMemorizer", "Main");
+    const QUrl url(QStringLiteral("qrc:/WordMemorizer/Main.qml"));
+    engine.load(url);
 
     return app.exec();
 }

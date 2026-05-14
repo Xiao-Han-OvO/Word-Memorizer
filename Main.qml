@@ -6,36 +6,38 @@ import QtQuick.Layouts
 
 ApplicationWindow {
     id: window
-    width: 1180
-    height: 760
-    minimumWidth: 980
-    minimumHeight: 640
+    width: 1000
+    height: 700
+    minimumWidth: 800
+    minimumHeight: 600
     visible: true
-    title: "VocabMemster"
+    title: "VocabMemster 2.0"
 
+    // 配色方案：现代简约风格
     property bool darkMode: true
-    property color bg0: darkMode ? "#09111f" : "#edf4ff"
-    property color bg1: darkMode ? "#151a34" : "#f9fbff"
-    property color card: darkMode ? "#182238" : "#ffffff"
-    property color card2: darkMode ? "#202b45" : "#f4f7ff"
-    property color text0: darkMode ? "#f8fbff" : "#172033"
-    property color text1: darkMode ? "#b9c5d8" : "#647089"
-    property color line: darkMode ? "#31405f" : "#dde6f5"
-    property color primary: "#7c5cff"
-    property color cyan: "#21d4fd"
-    property color green: "#31d0aa"
-    property color red: "#ff5d73"
-    property color amber: "#ffb84d"
+    property color bgPrimary: darkMode ? "#0f172a" : "#f8fafc"
+    property color bgSecondary: darkMode ? "#1e293b" : "#f1f5f9"
+    property color cardBg: darkMode ? "#1e293b" : "#ffffff"
+    property color textPrimary: darkMode ? "#f1f5f9" : "#0f172a"
+    property color textSecondary: darkMode ? "#94a3b8" : "#475569"
+    property color borderColor: darkMode ? "#334155" : "#e2e8f0"
+    property color accentColor: "#6366f1"     // Indigo
+    property color successColor: "#10b981"    // Emerald
+    property color warningColor: "#f59e0b"    // Amber
+    property color errorColor: "#ef4444"      // Red
+    property color infoColor: "#0ea5e9"       // Cyan
 
     Material.theme: darkMode ? Material.Dark : Material.Light
-    Material.accent: primary
-    Material.primary: primary
+    Material.accent: accentColor
+    Material.primary: accentColor
+
+    color: bgPrimary
 
     function feedbackColor(kind) {
-        if (kind === "success") return green
-        if (kind === "error") return red
-        if (kind === "answer") return cyan
-        return text1
+        if (kind === "success") return successColor
+        if (kind === "error") return errorColor
+        if (kind === "answer") return infoColor
+        return textSecondary
     }
 
     function addEditorWord(w, p, m, e) {
@@ -43,8 +45,8 @@ ApplicationWindow {
     }
 
     function editorItems() {
-        var items = []
-        for (var i = 0; i < editorModel.count; ++i) {
+        const items = []
+        for (let i = 0; i < editorModel.count; ++i) {
             items.push(editorModel.get(i))
         }
         return items
@@ -83,10 +85,10 @@ ApplicationWindow {
         fileMode: FileDialog.OpenFile
         nameFilters: ["Word book (*.txt)", "All files (*)"]
         onAccepted: {
-            var words = appController.loadEditorWords(selectedFile)
+            const words = appController.loadEditorWords(selectedFile)
             if (words.length > 0) {
                 editorModel.clear()
-                for (var i = 0; i < words.length; ++i) editorModel.append(words[i])
+                for (let i = 0; i < words.length; ++i) editorModel.append(words[i])
                 editorDialog.open()
             }
         }

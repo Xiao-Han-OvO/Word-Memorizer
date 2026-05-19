@@ -28,6 +28,7 @@ qt_add_qml_module(word_memorizer
     VERSION 1.0
     QML_FILES
         Main.qml
+        LucideIcon.qml
 )
 
 target_link_libraries(word_memorizer

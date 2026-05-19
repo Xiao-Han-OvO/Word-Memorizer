@@ -235,28 +235,28 @@ ApplicationWindow {
                     spacing: 10
 
                     StatCard {
-                        icon: "📊"
+                        icon: "bar-chart-3"
                         label: "总单词"
                         value: appController.totalCount
                         color: accentColor
                     }
 
                     StatCard {
-                        icon: "✅"
+                        icon: "check-circle-2"
                         label: "已掌握"
                         value: appController.masteredCount
                         color: successColor
                     }
 
                     StatCard {
-                        icon: "⚠️"
+                        icon: "alert-circle"
                         label: "错词"
                         value: appController.wrongCount
                         color: errorColor
                     }
 
                     StatCard {
-                        icon: "⏳"
+                        icon: "clock"
                         label: "剩余"
                         value: appController.remainingCount
                         color: warningColor
@@ -665,9 +665,10 @@ ApplicationWindow {
             anchors.margins: 10
             spacing: 10
 
-            Text {
-                text: icon
-                font.pixelSize: 20
+            LucideIcon {
+                iconName: icon
+                iconColor: color
+                iconSize: 24
             }
 
             ColumnLayout {

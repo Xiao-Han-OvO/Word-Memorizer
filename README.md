@@ -1,4 +1,4 @@
-# Word Memorizer 3.0 - alapha rc1
+# Word Memorizer 3.0 alapha rc1
 
 本版本已将原 GTKmm 界面重写为 **C++ 逻辑层 + QML 表现层**：
 

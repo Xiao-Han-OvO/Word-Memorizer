@@ -126,6 +126,17 @@ ApplicationWindow {
     Shortcut { sequence: "Ctrl+Tab"; onActivated: appController.nextWord() }
     Shortcut { sequence: "Ctrl+Shift+D"; onActivated: darkMode = !darkMode }
 
+    // ===== 自定义按钮样式 =====
+    component StyledButton: Button {
+        property color bgColor: accentColor
+        background: Rectangle {
+            radius: 8
+            color: bgColor
+            border.color: bgColor
+            opacity: parent.hovered ? 0.9 : 1.0
+        }
+    }
+
     // ===== 主布局 =====
     RowLayout {
         anchors.fill: parent
@@ -150,11 +161,15 @@ ApplicationWindow {
                 // 应用标题
                 ColumnLayout {
                     spacing: 8
-                    Label {
-                        text: "📚 VocabMemster"
-                        color: textPrimary
-                        font.pixelSize: 20
-                        font.bold: true
+                    RowLayout {
+                        spacing: 8
+                        LucideIcon { iconName: "book"; iconColor: accentColor; iconSize: 28 }
+                        Label {
+                            text: "VocabMemster"
+                            color: textPrimary
+                            font.pixelSize: 20
+                            font.bold: true
+                        }
                     }
                     Label {
                         text: "智能单词学习"
@@ -172,21 +187,39 @@ ApplicationWindow {
                 // 主要按钮
                 Button {
                     Layout.fillWidth: true
-                    text: "📂 打开词库"
+                    text: "打开词库"
                     font.bold: true
-                    Material.backgroundColor: accentColor
+                    contentItem: RowLayout {
+                        spacing: 8
+                        anchors.centerIn: parent
+                        LucideIcon { iconName: "folder"; iconColor: "white"; iconSize: 18 }
+                        Text { text: parent.parent.text; color: "white" }
+                    }
+                    background: Rectangle { radius: 8; color: accentColor }
                     onClicked: openDialog.open()
                 }
 
                 Button {
                     Layout.fillWidth: true
-                    text: "✏️ 编辑词库"
+                    text: "编辑词库"
+                    contentItem: RowLayout {
+                        spacing: 8
+                        anchors.centerIn: parent
+                        LucideIcon { iconName: "edit"; iconColor: palette.buttonText; iconSize: 18 }
+                        Text { text: parent.parent.text; color: palette.buttonText }
+                    }
                     onClicked: { editorModel.clear(); addEditorWord("", "", "", ""); editorDialog.open() }
                 }
 
                 Button {
                     Layout.fillWidth: true
-                    text: "❌ 错词本 (" + appController.wrongCount + ")"
+                    text: "错词本 (" + appController.wrongCount + ")"
+                    contentItem: RowLayout {
+                        spacing: 8
+                        anchors.centerIn: parent
+                        LucideIcon { iconName: "alert-circle"; iconColor: palette.buttonText; iconSize: 18 }
+                        Text { text: parent.parent.text; color: palette.buttonText }
+                    }
                     onClicked: wrongDrawer.open()
                 }
 
@@ -237,14 +270,21 @@ ApplicationWindow {
                     Layout.fillWidth: true
                     spacing: 8
                     Label {
-                        text: darkMode ? "🌙 深色" : "☀️ 浅色"
+                        text: darkMode ? "深色" : "浅色"
                         color: textSecondary
                         Layout.fillWidth: true
                         font.pixelSize: 12
                     }
-                    Switch {
-                        checked: darkMode
-                        onToggled: darkMode = checked
+                    Button {
+                        flat: true
+                        icon.name: darkMode ? "moon" : "sun"
+                        icon.source: ""
+                        contentItem: LucideIcon {
+                            iconName: window.darkMode ? "moon" : "sun"
+                            iconColor: accentColor
+                            iconSize: 20
+                        }
+                        onClicked: darkMode = !darkMode
                     }
                 }
 
@@ -254,14 +294,26 @@ ApplicationWindow {
                     spacing: 8
                     Button {
                         Layout.fillWidth: true
-                        text: "❓ 帮助"
+                        text: "帮助"
                         font.pixelSize: 11
+                        contentItem: RowLayout {
+                            anchors.centerIn: parent
+                            spacing: 4
+                            LucideIcon { iconName: "help-circle"; iconColor: palette.buttonText; iconSize: 16 }
+                            Text { text: parent.parent.text; color: palette.buttonText }
+                        }
                         onClicked: helpDialog.open()
                     }
                     Button {
                         Layout.fillWidth: true
-                        text: "ℹ️ 关于"
+                        text: "关于"
                         font.pixelSize: 11
+                        contentItem: RowLayout {
+                            anchors.centerIn: parent
+                            spacing: 4
+                            LucideIcon { iconName: "info"; iconColor: palette.buttonText; iconSize: 16 }
+                            Text { text: parent.parent.text; color: palette.buttonText }
+                        }
                         onClicked: aboutDialog.open()
                     }
                 }
@@ -484,7 +536,7 @@ ApplicationWindow {
                 }
                 Button { text: "📥 导入"; onClicked: editorImportDialog.open() }
                 Button { text: "➕ 新增"; onClicked: addEditorWord("", "", "", "") }
-                Button { text: "💾 保存"; Material.backgroundColor: accentColor; onClicked: editorSaveDialog.open() }
+                StyledButton { text: "💾 保存"; bgColor: accentColor; onClicked: editorSaveDialog.open() }
                 Button { text: "✕"; flat: true; onClicked: editorDialog.close() }
             }
 
@@ -673,9 +725,9 @@ ApplicationWindow {
                 Layout.alignment: Qt.AlignHCenter
                 spacing: 12
 
-                Button {
+                StyledButton {
                     text: "📂 打开词库"
-                    Material.backgroundColor: accentColor
+                    bgColor: accentColor
                     onClicked: openDialog.open()
                 }
 
@@ -784,10 +836,10 @@ ApplicationWindow {
                                 Layout.fillWidth: true
                                 spacing: 12
 
-                                Button {
+                                StyledButton {
                                     Layout.fillWidth: true
                                     text: "✅ 提交"
-                                    Material.backgroundColor: accentColor
+                                    bgColor: accentColor
                                     enabled: appController.inputEnabled
                                     onClicked: {
                                         appController.submitAnswer(answerField.text)
@@ -802,10 +854,10 @@ ApplicationWindow {
                                     onClicked: appController.revealAnswer()
                                 }
 
-                                Button {
+                                StyledButton {
                                     Layout.fillWidth: true
                                     text: "⏭️ 下一个"
-                                    Material.backgroundColor: successColor
+                                    bgColor: successColor
                                     onClicked: { answerField.text = ""; appController.nextWord(); answerField.forceActiveFocus() }
                                 }
                             }
@@ -861,9 +913,9 @@ ApplicationWindow {
                 Layout.alignment: Qt.AlignHCenter
                 spacing: 12
 
-                Button {
+                StyledButton {
                     text: "🔄 重新开始"
-                    Material.backgroundColor: accentColor
+                    bgColor: accentColor
                     onClicked: appController.resetProgress()
                 }
 

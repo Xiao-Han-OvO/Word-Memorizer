@@ -378,7 +378,7 @@ ApplicationWindow {
                         Layout.fillWidth: true
                         spacing: 6
                         Label {
-                            text: appController.loaded ? "📖 今日练习" : "👋 欢迎使用"
+                            text: appController.loaded ? "📖 今日练习" : "欢迎使用"
                             color: textPrimary
                             font.pixelSize: 24
                             font.bold: true
@@ -446,16 +446,29 @@ ApplicationWindow {
 
             RowLayout {
                 Layout.fillWidth: true
+                spacing: 8
+                
+                LucideIcon {
+                    iconName: "alert-circle"
+                    iconColor: errorColor
+                    iconSize: 20
+                }
+                
                 Label {
-                    text: "❌ 错词本"
+                    text: "错词本"
                     color: textPrimary
                     font.pixelSize: 18
                     font.bold: true
                     Layout.fillWidth: true
                 }
                 Button {
-                    text: "✕"
                     flat: true
+                    icon.name: ""
+                    contentItem: LucideIcon {
+                        iconName: "x"
+                        iconColor: textSecondary
+                        iconSize: 18
+                    }
                     onClicked: wrongDrawer.close()
                 }
             }
@@ -463,15 +476,18 @@ ApplicationWindow {
             RowLayout {
                 Layout.fillWidth: true
                 spacing: 8
-                Button {
+                
+                StyledButton {
                     Layout.fillWidth: true
-                    text: "💾 导出"
+                    text: "导出"
+                    bgColor: accentColor
                     enabled: appController.wrongCount > 0
                     onClicked: exportDialog.open()
                 }
+                
                 Button {
                     Layout.fillWidth: true
-                    text: "🗑️ 清空"
+                    text: "清空"
                     enabled: appController.wrongCount > 0
                     onClicked: appController.clearWrongWords()
                 }
@@ -547,7 +563,7 @@ ApplicationWindow {
     // ===== 编辑对话框 =====
     Dialog {
         id: editorDialog
-        title: "📝 词库编辑器"
+        title: "词库编辑器"
         modal: true
         width: Math.min(window.width - 60, 900)
         height: Math.min(window.height - 60, 620)
@@ -568,10 +584,29 @@ ApplicationWindow {
                     font.bold: true
                     Layout.fillWidth: true
                 }
-                Button { text: "📥 导入"; onClicked: editorImportDialog.open() }
-                Button { text: "➕ 新增"; onClicked: addEditorWord("", "", "", "") }
-                StyledButton { text: "💾 保存"; bgColor: accentColor; onClicked: editorSaveDialog.open() }
-                Button { text: "✕"; flat: true; onClicked: editorDialog.close() }
+                Button { 
+                    text: "导入"
+                    onClicked: editorImportDialog.open() 
+                }
+                Button { 
+                    text: "新增"
+                    onClicked: addEditorWord("", "", "", "") 
+                }
+                StyledButton { 
+                    text: "保存"
+                    bgColor: accentColor
+                    onClicked: editorSaveDialog.open() 
+                }
+                Button { 
+                    flat: true
+                    icon.name: ""
+                    contentItem: LucideIcon {
+                        iconName: "x"
+                        iconColor: textSecondary
+                        iconSize: 18
+                    }
+                    onClicked: editorDialog.close() 
+                }
             }
 
             Label {
@@ -628,7 +663,13 @@ ApplicationWindow {
 
                         Button {
                             Layout.columnSpan: 1
-                            text: "🗑️"
+                            flat: true
+                            icon.name: ""
+                            contentItem: LucideIcon {
+                                iconName: "trash-2"
+                                iconColor: errorColor
+                                iconSize: 16
+                            }
                             onClicked: editorModel.remove(index)
                         }
 
@@ -732,10 +773,11 @@ ApplicationWindow {
             width: Math.min(parent.width * 0.7, 580)
             spacing: 20
 
-            Label {
+            LucideIcon {
                 Layout.alignment: Qt.AlignHCenter
-                text: "📚"
-                font.pixelSize: 80
+                iconName: "book"
+                iconColor: accentColor
+                iconSize: 96
             }
 
             Label {
@@ -796,12 +838,24 @@ ApplicationWindow {
                         Layout.fillWidth: true
                         spacing: 12
 
-                        Label {
-                            text: appController.currentPos ? "[" + appController.currentPos + "]" : ""
-                            color: accentColor
-                            font.pixelSize: 14
-                            font.bold: true
+                        RowLayout {
+                            visible: appController.currentPos !== ""
+                            spacing: 4
                             padding: 8
+                            
+                            LucideIcon {
+                                iconName: "book"
+                                iconColor: accentColor
+                                iconSize: 14
+                            }
+                            
+                            Label {
+                                text: appController.currentPos || ""
+                                color: accentColor
+                                font.pixelSize: 12
+                                font.bold: true
+                            }
+                            
                             background: Rectangle {
                                 radius: 8
                                 color: Qt.rgba(accentColor.r, accentColor.g, accentColor.b, 0.1)
@@ -830,13 +884,25 @@ ApplicationWindow {
                         wrapMode: Text.WordWrap
                     }
 
-                    Label {
+                    RowLayout {
                         Layout.fillWidth: true
-                        text: appController.currentExample ? "📌 " + appController.currentExample : ""
-                        color: textSecondary
-                        font.pixelSize: 14
-                        horizontalAlignment: Text.AlignHCenter
-                        wrapMode: Text.WordWrap
+                        visible: appController.currentExample !== ""
+                        spacing: 8
+
+                        LucideIcon {
+                            iconName: "info"
+                            iconColor: textSecondary
+                            iconSize: 16
+                        }
+
+                        Label {
+                            text: appController.currentExample || ""
+                            color: textSecondary
+                            font.pixelSize: 14
+                            horizontalAlignment: Text.AlignHCenter
+                            wrapMode: Text.WordWrap
+                            Layout.fillWidth: true
+                        }
                     }
 
                     Item { Layout.fillHeight: true }
@@ -961,7 +1027,7 @@ ApplicationWindow {
                 }
 
                 Button {
-                    text: "💾 导出错词"
+                    text: "导出错词"
                     enabled: appController.wrongCount > 0
                     onClicked: exportDialog.open()
                 }

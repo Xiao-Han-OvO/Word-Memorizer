@@ -838,28 +838,31 @@ ApplicationWindow {
                         Layout.fillWidth: true
                         spacing: 12
 
-                        RowLayout {
+                        Rectangle {
                             visible: appController.currentPos !== ""
-                            spacing: 4
-                            padding: 8
-                            
-                            LucideIcon {
-                                iconName: "book"
-                                iconColor: accentColor
-                                iconSize: 14
-                            }
-                            
-                            Label {
-                                text: appController.currentPos || ""
-                                color: accentColor
-                                font.pixelSize: 12
-                                font.bold: true
-                            }
-                            
-                            background: Rectangle {
-                                radius: 8
-                                color: Qt.rgba(accentColor.r, accentColor.g, accentColor.b, 0.1)
-                                border.color: Qt.rgba(accentColor.r, accentColor.g, accentColor.b, 0.3)
+                            radius: 8
+                            color: Qt.rgba(accentColor.r, accentColor.g, accentColor.b, 0.1)
+                            border.color: Qt.rgba(accentColor.r, accentColor.g, accentColor.b, 0.3)
+                            implicitWidth: posRowLayout.implicitWidth + 16
+                            implicitHeight: posRowLayout.implicitHeight + 16
+
+                            RowLayout {
+                                id: posRowLayout
+                                anchors.centerIn: parent
+                                spacing: 4
+
+                                LucideIcon {
+                                    iconName: "book"
+                                    iconColor: accentColor
+                                    iconSize: 14
+                                }
+                                
+                                Label {
+                                    text: appController.currentPos || ""
+                                    color: accentColor
+                                    font.pixelSize: 12
+                                    font.bold: true
+                                }
                             }
                         }
 

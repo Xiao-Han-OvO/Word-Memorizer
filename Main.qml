@@ -12,6 +12,8 @@ ApplicationWindow {
     minimumHeight: 600
     visible: true
     title: "VocabMemster 2.0"
+    // 移除 GTK 默认标题栏，使用自定义样式
+    color: bgPrimary
 
     // 现代简约配色方案
     property bool darkMode: true
@@ -30,7 +32,59 @@ ApplicationWindow {
     Material.theme: darkMode ? Material.Dark : Material.Light
     Material.accent: accentColor
     Material.primary: accentColor
-    color: bgPrimary
+
+    // 自定义标题栏
+    header: Rectangle {
+        width: parent.width
+        height: 48
+        color: cardBg
+        
+        RowLayout {
+            anchors.fill: parent
+            anchors.leftMargin: 16
+            anchors.rightMargin: 16
+            anchors.bottomMargin: 1
+            spacing: 12
+            
+            LucideIcon {
+                iconName: "book"
+                iconColor: accentColor
+                iconSize: 24
+                Layout.alignment: Qt.AlignVCenter
+            }
+            
+            Label {
+                text: "VocabMemster"
+                color: textPrimary
+                font.pixelSize: 16
+                font.bold: true
+                Layout.fillWidth: true
+            }
+            
+            Item { Layout.fillWidth: true }
+            
+            Button {
+                flat: true
+                icon.name: ""
+                contentItem: LucideIcon {
+                    iconName: window.darkMode ? "moon" : "sun"
+                    iconColor: accentColor
+                    iconSize: 18
+                }
+                onClicked: darkMode = !darkMode
+                Layout.alignment: Qt.AlignVCenter
+            }
+        }
+        
+        // 底部边框线
+        Rectangle {
+            anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.right: parent.right
+            height: 1
+            color: borderColor
+        }
+    }
 
     function feedbackColor(kind) {
         if (kind === "success") return successColor
@@ -140,7 +194,10 @@ ApplicationWindow {
     // ===== 主布局 =====
     RowLayout {
         anchors.fill: parent
-        anchors.margins: 16
+        anchors.leftMargin: 16
+        anchors.rightMargin: 16
+        anchors.bottomMargin: 16
+        anchors.topMargin: 16
         spacing: 16
 
         // ===== 侧边栏 =====
@@ -264,29 +321,6 @@ ApplicationWindow {
                 }
 
                 Item { Layout.fillHeight: true }
-
-                // 主题切换
-                RowLayout {
-                    Layout.fillWidth: true
-                    spacing: 8
-                    Label {
-                        text: darkMode ? "深色" : "浅色"
-                        color: textSecondary
-                        Layout.fillWidth: true
-                        font.pixelSize: 12
-                    }
-                    Button {
-                        flat: true
-                        icon.name: darkMode ? "moon" : "sun"
-                        icon.source: ""
-                        contentItem: LucideIcon {
-                            iconName: window.darkMode ? "moon" : "sun"
-                            iconColor: accentColor
-                            iconSize: 20
-                        }
-                        onClicked: darkMode = !darkMode
-                    }
-                }
 
                 // 帮助和关于
                 RowLayout {

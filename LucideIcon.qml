@@ -19,6 +19,12 @@ Canvas {
         ctx.lineJoin = "round"
         ctx.fillStyle = "none"
         
+        // 缩放坐标以适应不同的图标大小
+        var scale = Math.min(width, height) / 24
+        ctx.translate(width / 2, height / 2)
+        ctx.scale(scale, scale)
+        ctx.translate(-12, -12)
+        
         switch(lucideIcon.iconName) {
             case "book":
                 ctx.beginPath()

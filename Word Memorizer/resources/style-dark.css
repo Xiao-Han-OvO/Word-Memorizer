@@ -1,0 +1,125 @@
+/* ========== 深色 Liquid Glass 主题 ========== */
+
+.dark-glass {
+  background-color: #1a1d23;
+  color: #e0e0e0;
+}
+
+.dark-glass .glass-card {
+  background: rgba(40, 44, 52, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.dark-glass .side-panel {
+  background: rgba(30, 33, 40, 0.65);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark-glass .stat-card {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.dark-glass .stat-value {
+  color: @accent_color;
+}
+
+.dark-glass .stat-label {
+  color: #aaa;
+}
+
+.dark-glass .glass-entry {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+
+.dark-glass .glass-entry:focus {
+  background: rgba(0, 0, 0, 0.5);
+  border-color: @accent_color;
+  box-shadow: 0 0 0 3px alpha(@accent_color, 0.3);
+}
+
+.dark-glass .glass-btn {
+  background: @accent_color;
+  color: white;
+}
+
+.dark-glass .glass-btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: @accent_color;
+  border-color: @accent_color;
+}
+
+.dark-glass .glass-progress trough {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.dark-glass .glass-progress progress {
+  background: @accent_color;
+}
+
+.dark-glass .custom-titlebar {
+  background: rgba(20, 22, 28, 0.7);
+}
+
+.dark-glass .custom-titlebar-label {
+  color: #ccc;
+}
+
+.dark-glass menubar {
+  background: rgba(40, 44, 52, 0.7);
+}
+
+.dark-glass .placeholder-page {
+  background: rgba(40, 44, 52, 0.6);
+  border-radius: 24px;
+  margin: 40px;
+}
+
+.dark-glass .placeholder-icon {
+  color: @accent_color;
+  opacity: 0.7;
+}
+
+.dark-glass .placeholder-text {
+  color: #888;
+}
+
+/* 标题栏加强 */
+.dark-glass .custom-titlebar {
+  background: rgba(50, 55, 65, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  margin: 8px;
+}
+.dark-glass .custom-titlebar-label {
+  color: #ddd;
+  font-weight: bold;
+}
+
+/* 菜单栏在深色模式下可见 */
+.dark-glass menubar {
+  background: rgba(50, 55, 65, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 深色侧边导航栏 */
+.dark-glass .side-navbar {
+  background: rgba(30, 33, 40, 0.6);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+.dark-glass .nav-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+.dark-glass .nav-button-label {
+  color: #aaa;
+}
+
+/* 深色模式对话框玻璃效果 */
+.dark-glass .dialog-box {
+  background: rgba(40, 44, 52, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}

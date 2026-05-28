@@ -36,13 +36,13 @@ AboutDialog::AboutDialog(Gtk::Window& parent)
 	titlebarBox->pack_end(*closeBtn, Gtk::PACK_SHRINK);
 	
 	// 设置标题
-	titleLabel.set_label("VocabMemster");
+	titleLabel.set_label("VocabMemorizer");
 	titleLabel.override_font(Pango::FontDescription("Sans Bold 20"));
 	titleLabel.set_margin_bottom(10);
 	titleLabel.get_style_context()->add_class("title");
 	
 	// 版本信息
-	versionLabel.set_label("Ver 3.0.1 Alpha RC 1");
+	versionLabel.set_label("Ver 3.0.1 Alpha RC 2");
 	versionLabel.override_font(Pango::FontDescription("Sans 12"));
 	versionLabel.set_margin_bottom(10);
 	versionLabel.get_style_context()->add_class("subtitle");

@@ -1,0 +1,109 @@
+#include "GlassTheme.h"
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <unistd.h>
+#include <libgen.h>
+#include <linux/limits.h>
+
+Glib::RefPtr<Gtk::CssProvider> GlassTheme::css_provider;
+Glib::RefPtr<Gdk::Screen> GlassTheme::screen;
+std::string GlassTheme::base_css;
+std::string GlassTheme::dark_css;
+
+static std::string get_resources_dir() {
+    static std::string resources_path;
+    if (!resources_path.empty()) return resources_path;
+
+    char buf[PATH_MAX];
+    ssize_t len = readlink("/proc/self/exe", buf, sizeof(buf)-1);
+    if (len != -1) {
+        buf[len] = '\0';
+        std::string exe_path(buf);
+        std::string dir = exe_path.substr(0, exe_path.find_last_of('/'));
+        resources_path = dir + "/resources";
+        return resources_path;
+    }
+    return "resources";
+}
+
+void GlassTheme::init() {
+    // 尝试从资源目录加载 CSS
+    std::string res_dir = get_resources_dir();
+    base_css = load_file(res_dir + "/style.css");
+    dark_css = load_file(res_dir + "/style-dark.css");
+    
+    if (base_css.empty()) {
+        // 降级：尝试当前工作目录下的 resources
+        base_css = load_file("resources/style.css");
+    }
+    if (dark_css.empty()) {
+        dark_css = load_file("resources/style-dark.css");
+    }
+    
+    if (base_css.empty()) {
+        base_css = ".light-glass { background: #f5f7fa; }";
+    }
+    if (dark_css.empty()) {
+        dark_css = ".dark-glass { background: #1a202c; }";
+    }
+    
+    css_provider = Gtk::CssProvider::create();
+}
+
+void GlassTheme::apply_theme(bool dark, const std::string& accent_color) {
+    if (!css_provider) init();
+    
+    if (screen) {
+        Gtk::StyleContext::remove_provider_for_screen(screen, css_provider);
+    }
+    
+    std::string combined = replace_accent(base_css, accent_color);
+    if (dark) {
+        combined += "\n" + replace_accent(dark_css, accent_color);
+    }
+    
+    try {
+        css_provider->load_from_data(combined);
+    } catch (const Gtk::CssProviderError& ex) {
+        std::cerr << "CSS Error: " << ex.what() << std::endl;
+    }
+    
+    if (screen) {
+        Gtk::StyleContext::add_provider_for_screen(screen, css_provider,
+            GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    }
+}
+
+void GlassTheme::set_screen(const Glib::RefPtr<Gdk::Screen>& scr) {
+    screen = scr;
+}
+
+void GlassTheme::add_provider(const std::string& css_data) {
+    auto provider = Gtk::CssProvider::create();
+    try {
+        provider->load_from_data(css_data);
+    } catch (...) {}
+    if (screen) {
+        Gtk::StyleContext::add_provider_for_screen(screen, provider,
+            GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    }
+}
+
+std::string GlassTheme::load_file(const std::string& path) {
+    std::ifstream file(path);
+    if (!file) return "";
+    std::stringstream ss;
+    ss << file.rdbuf();
+    return ss.str();
+}
+
+std::string GlassTheme::replace_accent(const std::string& css, const std::string& accent) {
+    std::string result = css;
+    size_t pos = 0;
+    while ((pos = result.find("@accent_color", pos)) != std::string::npos) {
+        result.replace(pos, 13, accent);
+        pos += accent.length();
+    }
+    return result;
+}

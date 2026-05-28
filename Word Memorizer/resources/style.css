@@ -195,3 +195,8 @@ menubar {
   border-radius: 20px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
+
+/* 图标字体强制设定 */
+.icon-label {
+  font-family: lucide;
+}

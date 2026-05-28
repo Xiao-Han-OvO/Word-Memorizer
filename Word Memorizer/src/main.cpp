@@ -6,7 +6,7 @@
 
 int main(int argc, char *argv[]) {
     // 初始化字体
-    IconHelper::init_fonts();
+    IconHelper::init_icons();
     
     // 初始化主题
     GlassTheme::init();

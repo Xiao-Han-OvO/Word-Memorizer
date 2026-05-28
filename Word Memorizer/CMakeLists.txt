@@ -48,7 +48,7 @@ set(HEADERS
 add_executable(word_memorizer ${SOURCES} ${HEADERS})
 
 # 链接库
-target_link_libraries(word_memorizer ${GTKMM_LIBRARIES} ${FONTCONFIG_LIBRARIES})
+target_link_libraries(word_memorizer ${GTKMM_LIBRARIES} ${FONTCONFIG_LIBRARIES} -lrsvg-2 -lgio-2.0 -lgdk_pixbuf-2.0 -lgobject-2.0 -lglib-2.0 -lcairo )
 
 # 设置可执行文件的属性
 set_target_properties(word_memorizer PROPERTIES

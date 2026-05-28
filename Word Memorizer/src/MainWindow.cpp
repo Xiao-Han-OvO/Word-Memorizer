@@ -9,8 +9,9 @@
 #include <iomanip>
 #include <algorithm>
 
-MainWindow::MainWindow() 
-    : mainContainer(Gtk::ORIENTATION_HORIZONTAL),
+MainWindow::MainWindow()
+    : mainContainer(Gtk::ORIENTATION_VERTICAL),
+      contentArea(Gtk::ORIENTATION_HORIZONTAL),
       leftBox(Gtk::ORIENTATION_VERTICAL),
       sidePanel(wordManager, settingsManager),
       learningPage(Gtk::ORIENTATION_VERTICAL),
@@ -29,20 +30,20 @@ MainWindow::MainWindow()
     set_decorated(false);
     get_style_context()->add_class("light-glass");
 
-    // ========== 自定义标题栏 ==========
+    // ========== 顶部全局标题栏 ==========
     auto* titlebarEventBox = Gtk::manage(new Gtk::EventBox());
     titlebarEventBox->set_hexpand(true);
     titlebarEventBox->get_style_context()->add_class("custom-titlebar-drag-area");
-    
+
     auto* titlebarBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 0));
     titlebarBox->set_border_width(4);
     titlebarBox->get_style_context()->add_class("custom-titlebar");
-    
+
     auto* windowTitle = Gtk::manage(new Gtk::Label("VocabMemster"));
     windowTitle->set_halign(Gtk::ALIGN_START);
     windowTitle->set_hexpand(true);
     windowTitle->get_style_context()->add_class("custom-titlebar-label");
-    
+
     auto* windowControls = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 2));
     auto* minimizeBtn = Gtk::manage(new Gtk::Button("−"));
     minimizeBtn->get_style_context()->add_class("custom-window-control");
@@ -51,13 +52,13 @@ MainWindow::MainWindow()
     closeBtn->get_style_context()->add_class("custom-window-control");
     closeBtn->get_style_context()->add_class("close");
     closeBtn->set_tooltip_text("关闭");
-    
+
     windowControls->pack_start(*minimizeBtn, Gtk::PACK_SHRINK);
     windowControls->pack_start(*closeBtn, Gtk::PACK_SHRINK);
     titlebarBox->pack_start(*windowTitle, Gtk::PACK_EXPAND_WIDGET);
     titlebarBox->pack_end(*windowControls, Gtk::PACK_SHRINK);
     titlebarEventBox->add(*titlebarBox);
-    
+
     // 拖动
     titlebarEventBox->add_events(Gdk::BUTTON_PRESS_MASK | Gdk::BUTTON_RELEASE_MASK | Gdk::POINTER_MOTION_MASK);
     titlebarEventBox->signal_button_press_event().connect([this](GdkEventButton* event) {
@@ -87,7 +88,9 @@ MainWindow::MainWindow()
     minimizeBtn->signal_clicked().connect([this]() { iconify(); });
     closeBtn->signal_clicked().connect([this]() { hide(); });
 
-    // ========== 左侧导航栏 ==========
+    mainContainer.pack_start(*titlebarEventBox, Gtk::PACK_SHRINK);
+
+    // ========== 左侧导航栏（始终可见，不随页面切换隐藏） ==========
     auto* navBar = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL));
     navBar->get_style_context()->add_class("side-navbar");
     navBar->set_size_request(60, -1);
@@ -105,9 +108,9 @@ MainWindow::MainWindow()
         return btn;
     };
 
-    auto* openBtn = make_nav_button(IconHelper::ICON_OPEN_FILE, "打开");
-    auto* helpBtn = make_nav_button(IconHelper::ICON_USAGE, "帮助");
-    auto* aboutBtn = make_nav_button(IconHelper::ICON_ABOUT, "关于");
+    auto* openBtn = make_nav_button(IconHelper::FOLDER_OPEN, "打开");
+    auto* helpBtn = make_nav_button(IconHelper::INFO, "帮助");
+    auto* aboutBtn = make_nav_button(IconHelper::INFO, "关于");
 
     navBar->pack_start(*openBtn, Gtk::PACK_SHRINK);
     navBar->pack_start(*helpBtn, Gtk::PACK_SHRINK);
@@ -120,12 +123,11 @@ MainWindow::MainWindow()
     // ========== 学习页 ==========
     leftBox.set_orientation(Gtk::ORIENTATION_VERTICAL);
 
-    // 单词卡片
     wordBox.set_spacing(15);
     wordBox.set_border_width(20);
     wordBox.set_halign(Gtk::ALIGN_CENTER);
     wordBox.get_style_context()->add_class("glass-card");
-    
+
     posLabel.set_justify(Gtk::JUSTIFY_CENTER);
     posLabel.override_font(Pango::FontDescription("Sans Bold 14"));
     posLabel.set_margin_bottom(10);
@@ -136,13 +138,12 @@ MainWindow::MainWindow()
     exampleLabel.override_font(Pango::FontDescription("Sans 12"));
     exampleLabel.set_line_wrap(true);
     exampleLabel.set_max_width_chars(40);
-    
+
     wordBox.pack_start(posLabel, Gtk::PACK_SHRINK);
     wordBox.pack_start(meaningLabel, Gtk::PACK_SHRINK);
     wordBox.pack_start(exampleLabel, Gtk::PACK_SHRINK);
     leftBox.pack_start(wordBox, Gtk::PACK_SHRINK);
 
-    // 输入区
     inputBox.set_spacing(10);
     inputBox.set_border_width(15);
     inputBox.set_halign(Gtk::ALIGN_CENTER);
@@ -157,14 +158,12 @@ MainWindow::MainWindow()
     inputBox.pack_start(submitButton, Gtk::PACK_SHRINK);
     leftBox.pack_start(inputBox, Gtk::PACK_SHRINK);
 
-    // 反馈区
     feedbackLabel.get_style_context()->add_class("feedback-label");
     feedbackLabel.set_justify(Gtk::JUSTIFY_CENTER);
     attemptLabel.set_justify(Gtk::JUSTIFY_CENTER);
     leftBox.pack_start(feedbackLabel, Gtk::PACK_SHRINK);
     leftBox.pack_start(attemptLabel, Gtk::PACK_SHRINK);
 
-    // 控制按钮
     controlBox.set_spacing(10);
     controlBox.set_border_width(10);
     controlBox.set_halign(Gtk::ALIGN_CENTER);
@@ -176,17 +175,15 @@ MainWindow::MainWindow()
     controlBox.pack_start(nextWordButton, Gtk::PACK_SHRINK);
     leftBox.pack_start(controlBox, Gtk::PACK_SHRINK);
 
-    learningPage.pack_start(*titlebarEventBox, Gtk::PACK_SHRINK);
     learningPage.pack_start(leftBox, Gtk::PACK_EXPAND_WIDGET);
 
     // ========== 占位页 ==========
-    placeholderPage.pack_start(*titlebarEventBox, Gtk::PACK_SHRINK);
     auto* placeholderBox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL));
     placeholderBox->set_halign(Gtk::ALIGN_CENTER);
     placeholderBox->set_valign(Gtk::ALIGN_CENTER);
     placeholderBox->set_vexpand(true);
     placeholderBox->get_style_context()->add_class("placeholder-page");
-    auto* alertIcon = IconHelper::create_icon(IconHelper::ICON_SEARCH_ALERT, 64);
+    auto* alertIcon = IconHelper::create_icon(IconHelper::ALERT_TRIANGLE, 64);
     alertIcon->get_style_context()->add_class("placeholder-icon");
     placeholderBox->pack_start(*alertIcon, Gtk::PACK_SHRINK);
     auto* placeholderLabel = Gtk::manage(new Gtk::Label("暂未打开单词本\n通过左侧「打开」按钮选择词库开始学习"));
@@ -197,7 +194,6 @@ MainWindow::MainWindow()
     placeholderPage.pack_start(*placeholderBox, Gtk::PACK_EXPAND_WIDGET);
 
     // ========== 完成页 ==========
-    completionPage.pack_start(*titlebarEventBox, Gtk::PACK_SHRINK);
     auto* completionContent = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL));
     completionContent->set_halign(Gtk::ALIGN_CENTER);
     completionContent->set_valign(Gtk::ALIGN_CENTER);
@@ -217,16 +213,17 @@ MainWindow::MainWindow()
     completionContent->pack_start(reviewWrongWordsButton, Gtk::PACK_SHRINK);
     completionPage.pack_start(*completionContent, Gtk::PACK_EXPAND_WIDGET);
 
-    // ========== 页面栈 ==========
     pageStack.add(placeholderPage, "placeholder");
     pageStack.add(learningPage, "learning");
     pageStack.add(completionPage, "completion");
     pageStack.set_visible_child("placeholder");
 
-    // ========== 主容器布局 ==========
-    mainContainer.pack_start(*navBar, Gtk::PACK_SHRINK);          // 左侧导航
-    mainContainer.pack_start(pageStack, Gtk::PACK_EXPAND_WIDGET); // 中间页面
-    mainContainer.pack_start(sidePanel, Gtk::PACK_SHRINK);        // 右侧面板
+    // ========== 内容区：导航栏 + 页面栈 + 右侧面板（全局固定布局） ==========
+    contentArea.pack_start(*navBar, Gtk::PACK_SHRINK);
+    contentArea.pack_start(pageStack, Gtk::PACK_EXPAND_WIDGET);
+    contentArea.pack_start(sidePanel, Gtk::PACK_SHRINK);
+    mainContainer.pack_start(contentArea, Gtk::PACK_EXPAND_WIDGET);
+
     add(mainContainer);
 
     // 信号连接
@@ -249,7 +246,6 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow() {}
 
-// 以下是所有成员函数的实现，保留原有逻辑不变
 void MainWindow::on_open_file() {
     Gtk::FileChooserDialog dialog("选择单词库文件", Gtk::FILE_CHOOSER_ACTION_OPEN);
     dialog.set_transient_for(*this);
@@ -367,37 +363,88 @@ void MainWindow::on_export_wrong_words() {
 
 void MainWindow::on_review_wrong_words() {
     auto wrongWords = wordManager.getWrongWords();
-    if (wrongWords.empty()) return;
+    if (wrongWords.empty()) {
+        Gtk::MessageDialog d(*this, "错词本为空", false, Gtk::MESSAGE_INFO, Gtk::BUTTONS_OK, true);
+        apply_dialog_theme(d);
+        d.run();
+        return;
+    }
     Gtk::Dialog dialog("错词本", *this, true);
-    dialog.set_default_size(600, 400);
+    dialog.set_default_size(600, 450);
+    dialog.get_style_context()->add_class("dialog-box");
+
     Gtk::Box content(Gtk::ORIENTATION_VERTICAL, 10);
+    content.set_border_width(16);
+
     std::stringstream header;
-    header << "错词本 - 共 " << wrongWords.size() << " 个单词";
+    header << "共 " << wrongWords.size() << " 个错词";
     auto* headerLabel = Gtk::manage(new Gtk::Label(header.str()));
+    headerLabel->override_font(Pango::FontDescription("Sans Bold 16"));
     content.pack_start(*headerLabel, Gtk::PACK_SHRINK);
+
     Gtk::ScrolledWindow scrolled;
     scrolled.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
-    Gtk::Box wordsBox(Gtk::ORIENTATION_VERTICAL, 5);
+    Gtk::Box wordsBox(Gtk::ORIENTATION_VERTICAL, 8);
+
     for (const auto& w : wrongWords) {
-        auto* card = Gtk::manage(new Gtk::Frame());
+        auto* card = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 4));
         card->get_style_context()->add_class("glass-card");
-        auto* box = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 4));
-        auto* wordLabel = Gtk::manage(new Gtk::Label(w.word + " [" + w.pos + "]"));
-        auto* meaningLabel = Gtk::manage(new Gtk::Label(w.meaning));
-        auto* exampleLabel = Gtk::manage(new Gtk::Label(w.example));
-        box->pack_start(*wordLabel, Gtk::PACK_SHRINK);
-        box->pack_start(*meaningLabel, Gtk::PACK_SHRINK);
-        box->pack_start(*exampleLabel, Gtk::PACK_SHRINK);
-        card->add(*box);
+        card->set_border_width(12);
+
+        auto* wordLabel = Gtk::manage(new Gtk::Label(w.word + "  [" + w.pos + "]"));
+        wordLabel->override_font(Pango::FontDescription("Sans Bold 14"));
+        wordLabel->set_halign(Gtk::ALIGN_START);
+
+        auto* meaningLabel = Gtk::manage(new Gtk::Label("释义: " + w.meaning));
+        meaningLabel->set_halign(Gtk::ALIGN_START);
+
+        auto* exampleLabel = Gtk::manage(new Gtk::Label("例句: " + w.example));
+        exampleLabel->set_halign(Gtk::ALIGN_START);
+        exampleLabel->set_line_wrap(true);
+
+        card->pack_start(*wordLabel, Gtk::PACK_SHRINK);
+        card->pack_start(*meaningLabel, Gtk::PACK_SHRINK);
+        card->pack_start(*exampleLabel, Gtk::PACK_SHRINK);
         wordsBox.pack_start(*card, Gtk::PACK_SHRINK);
     }
     scrolled.add(wordsBox);
     content.pack_start(scrolled, Gtk::PACK_EXPAND_WIDGET);
+
+    // 底部按钮
+    Gtk::Box buttonBox(Gtk::ORIENTATION_HORIZONTAL, 10);
+    buttonBox.set_halign(Gtk::ALIGN_END);
+    auto* exportBtn = Gtk::manage(new Gtk::Button("导出"));
+    exportBtn->get_style_context()->add_class("glass-btn-secondary");
+    auto* clearBtn = Gtk::manage(new Gtk::Button("清空"));
+    clearBtn->get_style_context()->add_class("glass-btn");
+    auto* closeBtn = Gtk::manage(new Gtk::Button("关闭"));
+    closeBtn->get_style_context()->add_class("glass-btn");
+
+    buttonBox.pack_start(*exportBtn, Gtk::PACK_SHRINK);
+    buttonBox.pack_start(*clearBtn, Gtk::PACK_SHRINK);
+    buttonBox.pack_start(*closeBtn, Gtk::PACK_SHRINK);
+    content.pack_start(buttonBox, Gtk::PACK_SHRINK);
+
     dialog.get_content_area()->pack_start(content);
     dialog.show_all();
     apply_dialog_theme(dialog);
+
+    exportBtn->signal_clicked().connect([this, &dialog]() {
+        dialog.hide();
+        on_export_wrong_words();
+    });
+    clearBtn->signal_clicked().connect([this, &dialog]() {
+        wordManager.clearWrongWords();
+        sidePanel.update_stats();
+        dialog.response(Gtk::RESPONSE_OK);
+    });
+    closeBtn->signal_clicked().connect([&dialog]() {
+        dialog.response(Gtk::RESPONSE_OK);
+    });
+
     dialog.run();
 }
+
 
 void MainWindow::on_clear_wrong_words() {
     wordManager.clearWrongWords();

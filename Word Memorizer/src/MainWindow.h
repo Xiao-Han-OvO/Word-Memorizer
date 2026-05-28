@@ -13,72 +13,45 @@ class WordManagerDialog;
 
 class MainWindow : public Gtk::Window {
 private:
-    // 主布局
-    Gtk::Box mainContainer;
-    Gtk::Box leftBox;
+    Gtk::Box mainContainer;       // 垂直容器：标题栏 + 内容区
+    Gtk::Box contentArea;         // 水平容器：导航 + 页面栈 + 侧栏
+    Gtk::Box leftBox;             // 学习页内容
     SidePanel sidePanel;
+
     Gtk::Stack pageStack;
-    
-    // 学习页与完成页
     Gtk::Box learningPage;
     Gtk::Box completionPage;
     Gtk::Box placeholderPage;
-    
-    // 拖动
+
     bool dragging;
     int drag_x, drag_y;
-    
-    // 核心数据
+
     WordManager wordManager;
     SettingsManager settingsManager;
     Word currentWord;
     int attemptCount;
-    
-    // 学习界面
-    Gtk::MenuBar menuBar;
+
     Gtk::Box wordBox;
     Gtk::Label posLabel;
     Gtk::Label meaningLabel;
     Gtk::Label exampleLabel;
-    
+
     Gtk::Box inputBox;
     Gtk::Label inputHintLabel;
     Gtk::Entry answerEntry;
     Gtk::Button submitButton;
-    
+
     Gtk::Label feedbackLabel;
     Gtk::Label attemptLabel;
-    
+
     Gtk::Box controlBox;
     Gtk::Button showAnswerButton;
     Gtk::Button nextWordButton;
-    
-    // 完成页面
+
     Gtk::Label completionTitle;
     Gtk::Label completionStats;
     Gtk::Button restartButton;
     Gtk::Button reviewWrongWordsButton;
-    
-    // 菜单
-    Gtk::MenuItem fileMenu;
-    Gtk::Menu fileSubmenu;
-    Gtk::MenuItem openMenuItem;
-    Gtk::MenuItem editWordsMenuItem;
-    Gtk::MenuItem resetProgressMenuItem;
-    Gtk::MenuItem settingsMenuItem;
-    Gtk::MenuItem exitMenuItem;
-    
-    Gtk::MenuItem viewMenu;
-    Gtk::Menu viewSubmenu;
-    Gtk::MenuItem wrongWordsMenuItem;
-    Gtk::MenuItem clearWrongWordsMenuItem;
-    Gtk::MenuItem exportWrongWordsMenuItem;
-    Gtk::MenuItem debugMenuItem;
-    
-    Gtk::MenuItem helpMenu;
-    Gtk::Menu helpSubmenu;
-    Gtk::MenuItem usageMenuItem;
-    Gtk::MenuItem aboutMenuItem;
 
 public:
     MainWindow();
@@ -103,7 +76,6 @@ private:
     void on_debug_info();
     void on_about();
     void on_usage();
-    
     void update_display();
     void reset_attempt();
     void show_completion_page();
@@ -112,10 +84,7 @@ private:
     void apply_theme();
     void toggle_dark_mode();
     void apply_dialog_theme(Gtk::Window& dialog);
-    
-    bool is_word_completed() const {
-        return !answerEntry.get_sensitive();
-    }
+    bool is_word_completed() const { return !answerEntry.get_sensitive(); }
 };
 
 class WordManagerDialog : public Gtk::Dialog {
